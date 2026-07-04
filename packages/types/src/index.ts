@@ -6,3 +6,4 @@
 export * from './cohort-criteria.schema'
 export * from './organization.schema'
 export * from './api-errors'
+export * from './session.schema'
