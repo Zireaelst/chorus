@@ -1,0 +1,53 @@
+/* apps/compliance/app/globals.css
+ * Inherits from the shared product app token set.
+ * FRONTEND_GUIDELINES.md: "apps/compliance — 768px (md), print-stylesheet required"
+ * "Auditors may review evidence on a tablet or need to print/export a disclosure record;
+ * a dedicated @media print stylesheet strips navigation chrome and renders disclosure
+ * records as clean, citable documents."
+ */
+
+/* Import shared product app tokens */
+@import '../../dashboard/app/globals.css';
+
+/* ── Print stylesheet ────────────────────────────────────────────────────────── */
+/* FRONTEND_GUIDELINES.md: "strips navigation chrome and renders disclosure records
+ * as clean, citable documents" */
+@media print {
+  /* Force light mode for print — dark backgrounds waste ink and reduce legibility */
+  :root {
+    --color-canvas: #ffffff;
+    --color-surface: #f5f5f5;
+    --color-text-primary: #000000;
+    --color-text-secondary: #444444;
+    --color-border-strong: #666666;
+    --color-border-hairline: #cccccc;
+  }
+
+  /* Strip navigation chrome */
+  nav,
+  header[role='banner'],
+  aside,
+  [data-print-hidden] {
+    display: none !important;
+  }
+
+  /* Disclosure records render as clean, citable documents */
+  main {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Avoid page breaks inside disclosure record cards */
+  [data-disclosure-record] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Show full URLs on print */
+  a[href]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.875em;
+    color: #444444;
+  }
+}

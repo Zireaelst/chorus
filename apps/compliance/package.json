@@ -1,0 +1,29 @@
+{
+  "name": "@chorus/compliance",
+  "version": "0.0.1",
+  "private": true,
+  "description": "apps/compliance — regulator/auditor read-only disclosure portal. Source: SYSTEM_ARCHITECTURE.md. SECURITY_MODEL.md: 'regulator role scoped to apps/compliance only'.",
+  "scripts": {
+    "dev": "next dev --port 3003",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint --max-warnings 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@chorus/config": "workspace:*",
+    "@chorus/types": "workspace:*",
+    "@chorus/ui": "workspace:*",
+    "@chorus/auth-client": "workspace:*",
+    "next": "15.0.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@chorus/config": "workspace:*",
+    "@types/node": "^22.7.5",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.6.3"
+  }
+}
