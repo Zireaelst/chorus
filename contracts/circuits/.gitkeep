@@ -1,0 +1,6 @@
+# contracts/circuits/ — ZK circuit definitions
+# BLOCKCHAIN_ARCHITECTURE.md defines two circuits:
+#   - Eligibility circuit (v0.7+)
+#   - Training-correctness circuit (v0.8)
+#
+# Sprint 0: empty. Requires needs-zk-signoff on all PRs.

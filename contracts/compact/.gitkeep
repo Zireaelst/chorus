@@ -1,0 +1,15 @@
+# contracts/compact/ — Compact contract source files
+# BLOCKCHAIN_ARCHITECTURE.md defines three contracts:
+#   - Eligibility record
+#   - Contribution ledger
+#   - Payout
+#
+# Sprint 0: Empty directory placeholder.
+# Implementation begins at v0.7 (testnet deployment milestone).
+#
+# CRITICAL: Any changes in contracts/ require:
+#   1. Two PR approvals
+#   2. Independent ZK/Midnight engineer sign-off (needs-zk-signoff label)
+# Source: GITHUB_WORKFLOW.md — "contracts/, packages/node: 2 approvals + needs-zk-signoff"
+# Source: antigravity-playbook.md — "You may not, without explicit human confirmation,
+# modify or deploy anything under contracts/"
