@@ -1,0 +1,140 @@
+name: CI
+
+# Source: GITHUB_WORKFLOW.md — CI pipeline
+# Triggers: every PR to main, and every push to main (for cache population)
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9.12.3'
+
+jobs:
+  # ── Lint ───────────────────────────────────────────────────────────────────
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (turbo)
+        run: pnpm lint
+        # GITHUB_WORKFLOW.md: "CI gate fails on any lint warning (--max-warnings 0)"
+
+  # ── Typecheck ──────────────────────────────────────────────────────────────
+  typecheck:
+    name: TypeCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build type dependencies
+        run: pnpm --filter @chorus/types build
+
+      - name: TypeCheck (turbo)
+        run: pnpm typecheck
+
+  # ── Unit tests ─────────────────────────────────────────────────────────────
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build type dependencies
+        run: pnpm --filter @chorus/types build
+
+      - name: Test (turbo)
+        run: pnpm test
+
+  # ── Build ──────────────────────────────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Turborepo remote cache — token configured in repo secrets when available
+      # Implementation plan open question: remote cache is scaffold-only in Sprint 0
+      - name: Build (turbo)
+        run: pnpm build
+        env:
+          # TURBO_TOKEN and TURBO_TEAM are set in GitHub secrets by the first engineer
+          # setting up the Vercel Remote Cache. Leave undefined here for local cache only.
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
+  # ── Dependency audit ───────────────────────────────────────────────────────
+  # SECURITY_MODEL.md: "Dependency updates go through automated vulnerability scanning in CI"
+  audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit Node.js dependencies
+        run: pnpm audit --audit-level=high

@@ -1,0 +1,56 @@
+name: Release
+
+# Source: GITHUB_WORKFLOW.md — "release pipeline: changesets-based versioning"
+# Source: CODING_STANDARDS.md — "drives packages/* versioning via changesets"
+#
+# Runs on merge to main when changeset files are present.
+# Publishes: @chorus/sdk (external npm) and @chorus/contracts-client (once open-sourced)
+# Internal packages remain private: no npm publish.
+
+on:
+  push:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9.12.3'
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # Create release commits and tags
+      pull-requests: write   # Create the "Version Packages" PR
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history needed for changeset version calculation
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          # npm registry for publishing @chorus/sdk once open-sourced
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create Release Pull Request or Publish
+        uses: changesets/action@v1
+        with:
+          # The publish command runs only when the "Version Packages" PR is merged
+          # and there are actually packages to publish (private: false)
+          publish: pnpm changeset publish
+          commit: 'chore: version packages'
+          title: 'chore: version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

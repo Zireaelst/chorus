@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Turborepo
+.turbo/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+.output/
+
+# Environment — never commit real secrets
+.env
+.env.local
+.env.*.local
+# .env.example files ARE committed (variable names, no values)
+
+# Signing keys — SECURITY_MODEL.md: keys never leave hospital infrastructure or CI secrets
+*.pem
+*.key
+*.p12
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.uv/
+*.egg-info/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Prisma
+prisma/generated/
+
+# Storybook
+storybook-static/

@@ -1,0 +1,75 @@
+name: CI — Python
+
+# Source: chorus-github-project-backlog.md —
+# "Separate GH Actions job (Python): ruff, mypy, pytest"
+# "Python service changes don't trigger unrelated Node builds and vice versa"
+#
+# This workflow runs ONLY when files inside services/ai/ change.
+# Node CI (ci.yml) does not run for Python-only PRs.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/ai/**'
+  push:
+    branches: [main]
+    paths:
+      - 'services/ai/**'
+
+env:
+  PYTHON_VERSION: '3.12'
+  UV_VERSION: '0.4.29'
+
+jobs:
+  # ── Lint + type check ──────────────────────────────────────────────────────
+  ruff-mypy:
+    name: Ruff + Mypy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/ai
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install uv
+        run: pip install uv==${{ env.UV_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Ruff lint
+        run: uv run ruff check src tests
+
+      - name: Ruff format check
+        run: uv run ruff format --check src tests
+
+      - name: Mypy typecheck
+        run: uv run mypy src
+
+  # ── Unit tests ─────────────────────────────────────────────────────────────
+  pytest:
+    name: Pytest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/ai
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install uv
+        run: pip install uv==${{ env.UV_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Run tests
+        run: uv run pytest --tb=short
