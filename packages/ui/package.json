@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "description": "Shared design-system component library (shadcn/Radix-based). Source: SYSTEM_ARCHITECTURE.md packages table. Components added here only when two apps need them — COMPONENT_ARCHITECTURE.md.",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
     }
   },
   "scripts": {
