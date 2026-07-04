@@ -1,0 +1,5 @@
+/* apps/research-portal/app/globals.css
+ * Imports shared product app token set — identical to apps/dashboard.
+ * No print stylesheet (research-portal users are sponsors, not auditors).
+ */
+@import '../../dashboard/app/globals.css';
