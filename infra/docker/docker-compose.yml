@@ -1,0 +1,80 @@
+# Chorus local development — Docker Compose
+# Source: chorus-github-project-backlog.md AC: "`docker compose up` starts api + ai + postgres + redis locally"
+# Source: SYSTEM_ARCHITECTURE.md — Postgres + Redis infrastructure components
+
+name: chorus
+
+services:
+  # ── PostgreSQL ─────────────────────────────────────────────────────────────
+  # DATABASE_DESIGN.md: "Postgres, accessed via Prisma, backs services/api"
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: chorus
+      POSTGRES_PASSWORD: chorus_dev_password   # local dev only — never commit a real password
+      POSTGRES_DB: chorus_dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U chorus']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Redis ──────────────────────────────────────────────────────────────────
+  # DATABASE_DESIGN.md: "Redis (separately, not covered here) backs the BullMQ
+  # verification queue and short-lived cache"
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── services/api (NestJS) ─────────────────────────────────────────────────
+  api:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.api
+    restart: unless-stopped
+    ports:
+      - '4000:4000'
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DATABASE_URL: postgresql://chorus:chorus_dev_password@postgres:5432/chorus_dev
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      # Hot-reload in development: mount source, not dist
+      - ../../services/api/src:/app/services/api/src
+
+  # ── services/ai (Python/FastAPI) ──────────────────────────────────────────
+  ai:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.ai
+    restart: unless-stopped
+    ports:
+      - '8000:8000'
+    environment:
+      PORT: 8000
+      CHORUS_API_INTERNAL_URL: http://api:4000
+    volumes:
+      # Hot-reload in development: mount source
+      - ../../services/ai/src:/app/src
+
+volumes:
+  postgres_data:
+

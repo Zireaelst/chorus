@@ -1,0 +1,44 @@
+# Dockerfile.api — services/api (NestJS)
+# Multi-stage build: deps → build → production
+# Context: monorepo root (../../ from infra/docker/)
+
+FROM node:20-alpine AS base
+RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
+WORKDIR /app
+
+# ── Stage: deps ───────────────────────────────────────────────────────────────
+FROM base AS deps
+# Copy workspace manifests for pnpm install (no source yet — maximise cache hit)
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY packages/config/package.json ./packages/config/
+COPY packages/types/package.json ./packages/types/
+COPY services/api/package.json ./services/api/
+RUN pnpm install --frozen-lockfile
+
+# ── Stage: build ──────────────────────────────────────────────────────────────
+FROM deps AS build
+# Copy source for the packages services/api depends on
+COPY packages/config ./packages/config
+COPY packages/types ./packages/types
+COPY services/api ./services/api
+RUN pnpm --filter @chorus/types build
+RUN pnpm --filter @chorus/api build
+
+# ── Stage: production ─────────────────────────────────────────────────────────
+FROM node:20-alpine AS production
+RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY packages/config/package.json ./packages/config/
+COPY packages/types/package.json ./packages/types/
+COPY services/api/package.json ./services/api/
+
+RUN pnpm install --frozen-lockfile --prod
+
+COPY --from=build /app/packages/types/dist ./packages/types/dist
+COPY --from=build /app/services/api/dist ./services/api/dist
+
+EXPOSE 4000
+CMD ["node", "services/api/dist/main.js"]

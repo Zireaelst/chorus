@@ -1,0 +1,40 @@
+# Dockerfile.node-service — Template for Node.js services
+# Used for: services/proof-worker, services/aggregator, services/notifications
+# Replace SERVICE_NAME with the service directory name when building.
+# Example: docker build --build-arg SERVICE_NAME=proof-worker -f Dockerfile.node-service .
+
+ARG SERVICE_NAME
+FROM node:20-alpine AS base
+RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
+WORKDIR /app
+
+FROM base AS deps
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY packages/config/package.json ./packages/config/
+COPY packages/types/package.json ./packages/types/
+COPY services/${SERVICE_NAME}/package.json ./services/${SERVICE_NAME}/
+RUN pnpm install --frozen-lockfile
+
+FROM deps AS build
+COPY packages/config ./packages/config
+COPY packages/types ./packages/types
+COPY services/${SERVICE_NAME} ./services/${SERVICE_NAME}
+RUN pnpm --filter @chorus/types build
+RUN pnpm --filter @chorus/${SERVICE_NAME} build
+
+FROM node:20-alpine AS production
+RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
+WORKDIR /app
+ENV NODE_ENV=production
+ARG SERVICE_NAME
+
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY packages/config/package.json ./packages/config/
+COPY packages/types/package.json ./packages/types/
+COPY services/${SERVICE_NAME}/package.json ./services/${SERVICE_NAME}/
+RUN pnpm install --frozen-lockfile --prod
+
+COPY --from=build /app/packages/types/dist ./packages/types/dist
+COPY --from=build /app/services/${SERVICE_NAME}/dist ./services/${SERVICE_NAME}/dist
+
+CMD ["node", "services/${SERVICE_NAME}/dist/index.js"]

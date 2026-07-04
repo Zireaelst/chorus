@@ -1,0 +1,32 @@
+# Dockerfile.ai — services/ai (Python/FastAPI)
+# Uses uv for fast, reproducible Python dependency installation.
+# Context: monorepo root (../../ from infra/docker/)
+
+FROM python:3.12-slim AS base
+
+# Install uv — the package manager for services/ai
+# Source: chorus-github-project-backlog.md — "uv/poetry setup"
+RUN pip install --no-cache-dir uv==0.4.29
+
+WORKDIR /app
+
+# ── Stage: deps ───────────────────────────────────────────────────────────────
+FROM base AS deps
+COPY services/ai/pyproject.toml services/ai/.python-version ./
+RUN uv sync --no-dev
+
+# ── Stage: production ─────────────────────────────────────────────────────────
+FROM base AS production
+WORKDIR /app
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+COPY --from=deps /app/.venv ./.venv
+COPY services/ai/src ./src
+
+# Use the venv's Python
+ENV PATH="/app/.venv/bin:${PATH}"
+
+EXPOSE 8000
+# AI_ARCHITECTURE.md: services/ai is a FastAPI application
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
