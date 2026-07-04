@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   },
 }
 
+import { LenisProvider } from './lib/lenis-provider'
+
 // apps/web root layout
 // DESIGN_SYSTEM.md: "apps/web is dark-first with no user-facing toggle — it hardcodes
 // className='dark' at the root with no cookie read and no toggle, since it has no light mode."
@@ -38,7 +40,9 @@ export default function RootLayout({ children }: { readonly children: React.Reac
   return (
     // className="dark" hardcoded — no cookie, no toggle, this app is dark-only
     <html lang="en" className={`dark ${fontSans.variable} ${fontMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <LenisProvider>{children}</LenisProvider>
+      </body>
     </html>
   )
 }
