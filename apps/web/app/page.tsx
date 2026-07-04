@@ -1,16 +1,29 @@
 import type { Metadata } from 'next'
-
-// apps/web home page — Sprint 0 scaffold
-// Content is intentionally absent here; v0.2 implements the marketing site.
-// DEVELOPMENT_ROADMAP.md: "v0.2 Landing (placeholder) — brand shell, waitlist"
-// GITHUB_WORKFLOW.md: "a feature not ready for production ships behind a flag"
+import { Hero } from './components/Hero'
+import { WaitlistForm } from './components/WaitlistForm'
 
 export const metadata: Metadata = {
   title: 'Chorus — Verifiable Healthcare AI Collaboration',
 }
 
-// Next.js App Router page — default export required per CODING_STANDARDS.md
 export default function HomePage() {
-  // Sprint 0: empty shell. v0.2 fills this with the marketing site.
-  return null
+  const docsUrl = process.env.DOCS_URL || 'http://localhost:3001'
+  
+  return (
+    <main className="min-h-screen bg-surface flex flex-col items-center pt-20 sm:pt-32 p-4">
+      <div className="w-full max-w-5xl mx-auto flex flex-col items-center">
+        <Hero />
+        <WaitlistForm />
+      </div>
+      
+      <div className="mt-32 text-center pb-12">
+        <a 
+          href={docsUrl} 
+          className="text-sm text-text-secondary hover:text-text-primary transition-colors underline underline-offset-4"
+        >
+          View Developer Documentation
+        </a>
+      </div>
+    </main>
+  )
 }
