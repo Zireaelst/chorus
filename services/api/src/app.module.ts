@@ -8,6 +8,7 @@ import { OrgsModule } from './orgs/orgs.module';
 import { CohortsModule } from './cohorts/cohorts.module';
 import { DeveloperModule } from './developer/developer.module';
 import { CopilotModule } from './copilot/copilot.module';
+import { AccessRequestsModule } from './access-requests/access-requests.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { CopilotModule } from './copilot/copilot.module';
     OrgsModule,
     CohortsModule,
     DeveloperModule,
-    CopilotModule
+    CopilotModule,
+    AccessRequestsModule
   ],
   controllers: [],
   providers: [],

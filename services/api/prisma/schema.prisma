@@ -7,17 +7,18 @@ datasource db {
 }
 
 model Organization {
-  id           String   @id @default(uuid()) @db.Uuid
-  name         String
-  type         String   // Enforced via Postgres CHECK constraint
-  workosOrgId  String   @unique @map("workos_org_id")
-  createdAt    DateTime @default(now()) @map("created_at")
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  type        String // Enforced via Postgres CHECK constraint
+  workosOrgId String   @unique @map("workos_org_id")
+  createdAt   DateTime @default(now()) @map("created_at")
 
-  memberships Memberships[]
-  auditLogs   AuditLog[]
-  cohorts     Cohort[]
-  apiKeys     ApiKey[]
-  webhooks    Webhook[]
+  memberships    Memberships[]
+  auditLogs      AuditLog[]
+  cohorts        Cohort[]
+  apiKeys        ApiKey[]
+  webhooks       Webhook[]
+  accessRequests CohortAccessRequest[]
 
   @@map("organizations")
 }
@@ -28,10 +29,11 @@ model User {
   workosUserId String   @unique @map("workos_user_id")
   createdAt    DateTime @default(now()) @map("created_at")
 
-  memberships Memberships[]
-  auditLogs   AuditLog[]
-  cohorts     Cohort[]
-  apiKeys     ApiKey[]
+  memberships            Memberships[]
+  auditLogs              AuditLog[]
+  cohorts                Cohort[]
+  apiKeys                ApiKey[]
+  accessRequestDecisions CohortAccessRequest[]
 
   @@map("users")
 }
@@ -40,7 +42,7 @@ model Memberships {
   id        String   @id @default(uuid()) @db.Uuid
   userId    String   @map("user_id") @db.Uuid
   orgId     String   @map("org_id") @db.Uuid
-  role      String   // Enforced via Postgres CHECK constraint
+  role      String // Enforced via Postgres CHECK constraint
   createdAt DateTime @default(now()) @map("created_at")
 
   user         User         @relation(fields: [userId], references: [id], onDelete: Restrict)
@@ -66,47 +68,67 @@ model AuditLog {
 }
 
 model Cohort {
-  id               String   @id @default(uuid()) @db.Uuid
-  orgId            String   @map("org_id") @db.Uuid
-  createdByUserId  String   @map("created_by_user_id") @db.Uuid
-  title            String
-  criteria         Json
-  status           String
-  createdAt        DateTime @default(now()) @map("created_at")
-  updatedAt        DateTime @updatedAt @map("updated_at")
+  id              String   @id @default(uuid()) @db.Uuid
+  orgId           String   @map("org_id") @db.Uuid
+  createdByUserId String   @map("created_by_user_id") @db.Uuid
+  title           String
+  criteria        Json
+  status          String
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
-  organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
-  createdByUser User        @relation(fields: [createdByUserId], references: [id], onDelete: Restrict)
+  organization  Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  createdByUser User         @relation(fields: [createdByUserId], references: [id], onDelete: Restrict)
+
+  accessRequests CohortAccessRequest[]
 
   @@index([orgId, status])
   @@map("cohorts")
 }
 
-model ApiKey {
-  id               String    @id @default(uuid()) @db.Uuid
-  orgId            String    @map("org_id") @db.Uuid
-  name             String
-  keyHash          String    @unique @map("key_hash")
-  createdByUserId  String    @map("created_by_user_id") @db.Uuid
-  createdAt        DateTime  @default(now()) @map("created_at")
-  revokedAt        DateTime? @map("revoked_at")
+model CohortAccessRequest {
+  id              String    @id @default(uuid()) @db.Uuid
+  cohortId        String    @map("cohort_id") @db.Uuid
+  requestingOrgId String    @map("requesting_org_id") @db.Uuid
+  status          String
+  justification   String
+  decidedByUserId String?   @map("decided_by_user_id") @db.Uuid
+  createdAt       DateTime  @default(now()) @map("created_at")
+  decidedAt       DateTime? @map("decided_at")
 
-  organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
-  createdByUser User        @relation(fields: [createdByUserId], references: [id], onDelete: Restrict)
+  cohort        Cohort       @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  requestingOrg Organization @relation(fields: [requestingOrgId], references: [id], onDelete: Restrict)
+  decidedByUser User?        @relation(fields: [decidedByUserId], references: [id], onDelete: Restrict)
+
+  @@unique([cohortId, requestingOrgId, status], map: "unique_pending_request")
+  @@map("cohort_access_requests")
+}
+
+model ApiKey {
+  id              String    @id @default(uuid()) @db.Uuid
+  orgId           String    @map("org_id") @db.Uuid
+  name            String
+  keyHash         String    @unique @map("key_hash")
+  createdByUserId String    @map("created_by_user_id") @db.Uuid
+  createdAt       DateTime  @default(now()) @map("created_at")
+  revokedAt       DateTime? @map("revoked_at")
+
+  organization  Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  createdByUser User         @relation(fields: [createdByUserId], references: [id], onDelete: Restrict)
 
   @@map("api_keys")
 }
 
 model Webhook {
-  id          String   @id @default(uuid()) @db.Uuid
-  orgId       String   @map("org_id") @db.Uuid
-  url         String
-  secretHash  String   @map("secret_hash")
-  eventTypes  String[] @map("event_types")
-  status      String
-  createdAt   DateTime @default(now()) @map("created_at")
+  id         String   @id @default(uuid()) @db.Uuid
+  orgId      String   @map("org_id") @db.Uuid
+  url        String
+  secretHash String   @map("secret_hash")
+  eventTypes String[] @map("event_types")
+  status     String
+  createdAt  DateTime @default(now()) @map("created_at")
 
-  organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  organization Organization      @relation(fields: [orgId], references: [id], onDelete: Restrict)
   deliveries   WebhookDelivery[]
 
   @@map("webhooks")
@@ -121,7 +143,7 @@ model WebhookDelivery {
   attemptCount Int      @map("attempt_count")
   attemptedAt  DateTime @map("attempted_at")
 
-  webhook      Webhook  @relation(fields: [webhookId], references: [id], onDelete: Restrict)
+  webhook Webhook @relation(fields: [webhookId], references: [id], onDelete: Restrict)
 
   @@index([status]) // Note: partial index for 'failed' will be added manually
   @@map("webhook_deliveries")
