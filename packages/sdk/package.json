@@ -1,0 +1,14 @@
+{
+  "name": "@chorus/sdk",
+  "version": "0.0.1",
+  "private": true,
+  "description": "@chorus/sdk — external developer integration SDK. Source: SYSTEM_ARCHITECTURE.md. Open-source post-v0.8 audit. Full implementation v0.7+.",
+  "main": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@chorus/config": "workspace:*",
+    "typescript": "^5.6.3"
+  }
+}
