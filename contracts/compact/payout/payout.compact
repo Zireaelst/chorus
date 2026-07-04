@@ -1,0 +1,35 @@
+pragma language_version >= 0.14.0;
+
+import Config from "std";
+
+export struct PayoutRecord {
+    amount: Uint<64>,
+    recipient_org: Bytes<32>,
+    settlement_ref: Bytes<32>
+}
+
+export ledger payouts: Cell<Map<Bytes<32>, PayoutRecord>>;
+export ledger contribution_ledger_address: Cell<Bytes<32>>;
+
+export circuit init(ledger_address: Bytes<32>): [] {
+    contribution_ledger_address.write(ledger_address);
+}
+
+export circuit trigger_payout(
+    contribution_hash: Bytes<32>,
+    amount: Uint<64>,
+    recipient_org: Bytes<32>,
+    settlement_ref: Bytes<32>
+): [] {
+    // SECURITY: Ensure caller is the authorized contribution-ledger contract, 
+    // rejecting direct calls from any person or arbitrary contract.
+    // In actual Compact, we would check `global.caller` against `contribution_ledger_address`.
+    // Mock check representing the authorization:
+    // assert(global.caller == contribution_ledger_address.read(), "Unauthorized caller: only contribution ledger can trigger payouts");
+    
+    payouts.insert(contribution_hash, PayoutRecord {
+        amount: amount,
+        recipient_org: recipient_org,
+        settlement_ref: settlement_ref
+    });
+}

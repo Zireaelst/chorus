@@ -1,0 +1,25 @@
+pragma language_version >= 0.14.0;
+
+import Config from "std";
+
+export ledger attestations: Cell<Map<Bytes<32>, Attestation>>;
+
+export struct Attestation {
+    criterion_hash: Bytes<32>,
+    is_match: Boolean,
+    size_bucket: Uint<8>
+}
+
+export circuit attest_eligibility(
+    criterion_hash: Bytes<32>,
+    is_match: Boolean,
+    size_bucket: Uint<8>
+): [] {
+    // In v0.8, this circuit will take a witness of patient data and actually compute the match.
+    // For this Sprint 7 mock, we take the result directly.
+    attestations.insert(criterion_hash, Attestation {
+        criterion_hash: criterion_hash,
+        is_match: is_match,
+        size_bucket: size_bucket
+    });
+}
