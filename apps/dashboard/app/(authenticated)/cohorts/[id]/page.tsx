@@ -16,7 +16,8 @@ export default function CohortBuilderPage() {
             <Link href="/cohorts">
               <Button variant="secondary">Cancel</Button>
             </Link>
-            <Button variant="primary">Save as Draft</Button>
+            <Button variant="secondary">Save as Draft</Button>
+            <Button variant="primary">Submit</Button>
           </div>
         </div>
         
