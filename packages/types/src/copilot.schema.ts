@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { cohortCriteriaSchema } from '../cohort-criteria.schema';
+import { cohortCriteriaSchema } from './cohort-criteria.schema';
 
 // POST /v1/copilot/cohort-draft
 export const copilotDraftRequestSchema = z.object({
