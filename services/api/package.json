@@ -1,0 +1,28 @@
+{
+  "name": "@chorus/api",
+  "version": "0.0.1",
+  "private": true,
+  "description": "services/api — NestJS synchronous API gateway. The single entry point for all apps and SDK integrations. Source: SYSTEM_ARCHITECTURE.md.",
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch",
+    "start": "node dist/main",
+    "lint": "eslint src --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@chorus/types": "workspace:*",
+    "@nestjs/common": "^10.4.4",
+    "@nestjs/core": "^10.4.4",
+    "@nestjs/platform-fastify": "^10.4.4",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@chorus/config": "workspace:*",
+    "@nestjs/cli": "^10.4.5",
+    "@types/node": "^22.7.5",
+    "typescript": "^5.6.3"
+  }
+}
