@@ -73,3 +73,6 @@ jobs:
 
       - name: Run tests
         run: uv run pytest --tb=short
+
+      - name: Run Golden Set Evaluation
+        run: uv run python eval/run_eval.py
