@@ -7,6 +7,7 @@ import { AuditModule } from './audit/audit.module';
 import { OrgsModule } from './orgs/orgs.module';
 import { CohortsModule } from './cohorts/cohorts.module';
 import { DeveloperModule } from './developer/developer.module';
+import { CopilotModule } from './copilot/copilot.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { DeveloperModule } from './developer/developer.module';
     AuditModule,
     OrgsModule,
     CohortsModule,
-    DeveloperModule
+    DeveloperModule,
+    CopilotModule
   ],
   controllers: [],
   providers: [],
