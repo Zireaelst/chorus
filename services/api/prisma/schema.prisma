@@ -84,6 +84,7 @@ model Cohort {
   createdByUser User         @relation(fields: [createdByUserId], references: [id], onDelete: Restrict)
 
   accessRequests CohortAccessRequest[]
+  modelCheckpoints ModelCheckpoint[]
 
   @@index([orgId, status])
   @@map("cohorts")
@@ -189,4 +190,30 @@ model FeeLedgerEntry {
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
 
   @@map("fee_ledger_entries")
+}
+
+model ModelCheckpoint {
+  id             String   @id @default(uuid()) @db.Uuid
+  cohortId       String   @map("cohort_id") @db.Uuid
+  startRound     Int      @map("start_round")
+  endRound       Int      @map("end_round")
+  checkpointHash String   @map("checkpoint_hash")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  cohort Cohort @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  licenses ModelLicense[]
+
+  @@map("model_checkpoints")
+}
+
+model ModelLicense {
+  id           String   @id @default(uuid()) @db.Uuid
+  checkpointId String   @map("checkpoint_id") @db.Uuid
+  licenseeName String   @map("licensee_name")
+  termsText    String   @map("terms_text")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  checkpoint ModelCheckpoint @relation(fields: [checkpointId], references: [id], onDelete: Restrict)
+
+  @@map("model_licenses")
 }
