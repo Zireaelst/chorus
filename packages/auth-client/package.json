@@ -1,0 +1,14 @@
+{
+  "name": "@chorus/auth-client",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Thin abstraction over WorkOS auth. Source: SYSTEM_ARCHITECTURE.md. Full implementation in v0.3.",
+  "main": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@chorus/config": "workspace:*",
+    "typescript": "^5.6.3"
+  }
+}
