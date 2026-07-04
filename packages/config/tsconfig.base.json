@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    // ── Strictness ─────────────────────────────────────────────────────────────
+    // CODING_STANDARDS.md: "TypeScript strict mode is non-negotiable (strict: true
+    // in every tsconfig.json, inherited from packages/config). `any` is banned by
+    // lint rule; if a type genuinely can't be known, use `unknown` and narrow it."
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "useUnknownInCatchVariables": true,
+
+    // ── Module resolution ──────────────────────────────────────────────────────
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+
+    // ── Output ────────────────────────────────────────────────────────────────
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // ── Path aliases ──────────────────────────────────────────────────────────
+    "baseUrl": "."
+  }
+}
