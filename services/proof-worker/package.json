@@ -1,0 +1,16 @@
+{
+  "name": "@chorus/proof-worker",
+  "version": "0.0.1",
+  "private": true,
+  "description": "services/proof-worker — BullMQ-backed ZK proof verification worker. Performs off-chain well-formedness pre-check, then submits to Midnight network. Source: SYSTEM_ARCHITECTURE.md, BLOCKCHAIN_ARCHITECTURE.md.",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@chorus/config": "workspace:*",
+    "@types/node": "^22.7.5",
+    "typescript": "^5.6.3"
+  }
+}
