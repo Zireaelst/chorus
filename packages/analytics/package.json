@@ -1,0 +1,14 @@
+{
+  "name": "@chorus/analytics",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Product event-tracking abstraction. SYSTEM_ARCHITECTURE.md: 'never patient data'. Full implementation post-v0.3.",
+  "main": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@chorus/config": "workspace:*",
+    "typescript": "^5.6.3"
+  }
+}
