@@ -1,0 +1,7 @@
+# docs/internal/ — Internal documentation
+# Never rendered publicly. Never mirrored to open-source.
+# Source: SYSTEM_ARCHITECTURE.md — "docs/internal: never rendered publicly,
+# never mirrored"
+#
+# Includes: architecture decision records under review, security runbooks,
+# incident templates, and anything not ready for external visibility.

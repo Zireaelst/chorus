@@ -1,0 +1,7 @@
+# docs/public/ — Public developer documentation
+# Rendered by apps/docs. Mirrors to open-source with contracts/ at v0.8+ transition.
+# Source: SYSTEM_ARCHITECTURE.md — "docs/public: rendered by apps/docs; mirrors to
+# open source with contracts/"
+#
+# Sprint 0: empty. First content added in v0.2 (developer quickstart for Chorus Node).
+# CONTRIBUTING.md: ADR (Architecture Decision Record) files live here.
