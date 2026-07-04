@@ -1,32 +1,51 @@
-# services/ai — FastAPI application
-# Sprint 0: minimal scaffold with /healthz endpoint only.
-# No AI agents, no LangGraph, no model calls — those arrive in v0.5.
-# Source: SYSTEM_ARCHITECTURE.md — "services/ai (Python, FastAPI, LangGraph)"
-# Source: AI_ARCHITECTURE.md — "serves two capabilities" (v0.5+)
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Optional, Any
+from src.graph import graph
+from src.agents.compliance import run_compliance_check, ComplianceCheckResponse
 
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+app = FastAPI(title="Chorus AI Copilot")
 
-app = FastAPI(
-    title="Chorus AI",
-    description=(
-        "AI copilot service for cohort criteria extraction and compliance flagging. "
-        "Source: AI_ARCHITECTURE.md. "
-        "Sprint 0: health-check endpoint only."
-    ),
-    version="0.0.1",
-    # Disable /docs in production — not a public-facing API
-    docs_url="/docs" if __name__ == "__main__" else None,
-    redoc_url=None,
-)
+class CopilotDraftRequest(BaseModel):
+    description: str
+    existingCriteria: Optional[dict] = None
 
+class CopilotDraftResponse(BaseModel):
+    suggestedCriteria: Optional[dict] = None
+    ambiguousFields: list[str]
+    requiresReview: bool = True
 
-@app.get(
-    "/healthz",
-    summary="Health check",
-    description="Returns 200 OK if the service is running. Used by Docker Compose and CI.",
-    tags=["Internal"],
-)
-async def health() -> JSONResponse:
-    """Liveness probe — no dependency checks in Sprint 0."""
-    return JSONResponse(content={"status": "ok"})
+class ComplianceCheckRequest(BaseModel):
+    criteria: dict
+    jurisdiction: str
+
+@app.post("/v1/copilot/cohort-draft", response_model=CopilotDraftResponse)
+def cohort_draft(req: CopilotDraftRequest):
+    # Run the graph
+    initial_state = {
+        "description": req.description,
+        "existing_criteria": req.existingCriteria,
+    }
+    
+    final_state = graph.invoke(initial_state)
+    
+    if final_state.get("error"):
+        if "PII detected" in final_state["error"] or "detected" in final_state["error"]:
+            raise HTTPException(status_code=422, detail="PII_DETECTED")
+        raise HTTPException(status_code=400, detail=final_state["error"])
+        
+    crit = final_state.get("suggested_criteria")
+    return CopilotDraftResponse(
+        suggestedCriteria=crit.model_dump() if crit else None,
+        ambiguousFields=final_state.get("ambiguous_fields", []),
+        requiresReview=True
+    )
+
+@app.post("/v1/copilot/compliance-check", response_model=ComplianceCheckResponse)
+def compliance_check(req: ComplianceCheckRequest):
+    # Run the compliance agent directly
+    try:
+        res = run_compliance_check(req.criteria, req.jurisdiction)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
