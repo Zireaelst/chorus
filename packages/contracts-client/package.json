@@ -1,0 +1,14 @@
+{
+  "name": "@chorus/contracts-client",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Generated typed bindings from Compact contract schemas. Source: SYSTEM_ARCHITECTURE.md. Populated by codegen at v0.7.",
+  "main": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@chorus/config": "workspace:*",
+    "typescript": "^5.6.3"
+  }
+}
