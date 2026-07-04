@@ -1,0 +1,16 @@
+{
+  "name": "@chorus/aggregator",
+  "version": "0.0.1",
+  "private": true,
+  "description": "services/aggregator — federated model merging service. Receives verified updates from proof-worker and merges them into the shared checkpoint. Source: SYSTEM_ARCHITECTURE.md.",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@chorus/config": "workspace:*",
+    "@types/node": "^22.7.5",
+    "typescript": "^5.6.3"
+  }
+}
