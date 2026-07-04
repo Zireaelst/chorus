@@ -1,10 +1,39 @@
 import type { NextConfig } from 'next'
 
+const cspHeader = `
+  default-src 'self';
+  script-src 'self' 'unsafe-eval' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' blob: data:;
+  font-src 'self';
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  frame-ancestors 'none';
+  upgrade-insecure-requests;
+`.replace(/\s{2,}/g, ' ').trim();
+
+
 // apps/web Next.js configuration — marketing site
 // FRONTEND_GUIDELINES.md: "apps/web — 360px, fully responsive, mobile-first"
 // All images go through next/image — FRONTEND_GUIDELINES.md: "no raw <img> tags"
 
 const config: NextConfig = {
+
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: cspHeader,
+          },
+        ],
+      },
+    ];
+  },
+
   // Strict mode to surface React 19 deprecation warnings early
   reactStrictMode: true,
 
