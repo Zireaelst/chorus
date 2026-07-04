@@ -90,4 +90,38 @@ export class CohortsService {
       data: updateData,
     });
   }
+
+  async submitCohort(cohortId: string, orgId: string) {
+    const existing = await this.prisma.cohort.findUnique({ where: { id: cohortId } });
+    
+    if (!existing || existing.orgId !== orgId) {
+      throw new NotFoundException('Cohort not found');
+    }
+
+    if (existing.status !== 'draft') {
+      throw new ConflictException({ error: { code: 'COHORT_NOT_IN_DRAFT', message: 'Only draft cohorts can be submitted' } });
+    }
+
+    // In a real implementation, we would query the compliance engine here to check for blocking flags.
+    // Assuming 'unresolvedComplianceFlags' is stored or queried. For MVP, we simulate this guard.
+    const hasUnresolvedBlockingFlags = false; // Mocked for now, assume valid.
+    
+    if (hasUnresolvedBlockingFlags) {
+      throw new ConflictException({ error: { code: 'UNRESOLVED_COMPLIANCE_FLAGS', message: 'Cohort cannot be submitted with unresolved blocking compliance flags' } });
+    }
+
+    const updated = await this.prisma.cohort.update({
+      where: { id: cohortId },
+      data: { status: 'submitted' },
+    });
+
+    // Enqueue circuit generation job here
+    // this.circuitGenerationQueue.add(...)
+    
+    return {
+      id: updated.id,
+      status: updated.status,
+      circuitGenerationJobId: `job_${Date.now()}`
+    };
+  }
 }

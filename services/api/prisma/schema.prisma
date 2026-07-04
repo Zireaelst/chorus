@@ -19,6 +19,7 @@ model Organization {
   apiKeys        ApiKey[]
   webhooks       Webhook[]
   accessRequests CohortAccessRequest[]
+  reputationScores ReputationScore[]
 
   @@map("organizations")
 }
@@ -147,4 +148,16 @@ model WebhookDelivery {
 
   @@index([status]) // Note: partial index for 'failed' will be added manually
   @@map("webhook_deliveries")
+}
+
+model ReputationScore {
+  id             String   @id @default(uuid()) @db.Uuid
+  orgId          String   @map("org_id") @db.Uuid
+  score          Float
+  computedAt     DateTime @default(now()) @map("computed_at")
+  formulaVersion String   @map("formula_version")
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+
+  @@map("reputation_scores")
 }

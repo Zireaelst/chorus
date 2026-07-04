@@ -46,4 +46,15 @@ export class CohortsController {
     const orgId = req.user?.memberships[0]?.orgId; 
     return this.cohortsService.updateCohort(id, orgId, body);
   }
+
+  @Post(':id/submit')
+  @UseGuards(RbacGuard)
+  @Roles('hospital_admin', 'compliance_officer')
+  async submitCohort(
+    @Param('id') id: string,
+    @Req() req: FastifyRequest & { user?: any }
+  ) {
+    const orgId = req.user?.memberships[0]?.orgId;
+    return this.cohortsService.submitCohort(id, orgId);
+  }
 }
