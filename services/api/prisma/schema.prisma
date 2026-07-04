@@ -20,6 +20,8 @@ model Organization {
   webhooks       Webhook[]
   accessRequests CohortAccessRequest[]
   reputationScores ReputationScore[]
+  billingSubscription BillingSubscription?
+  feeLedgerEntries    FeeLedgerEntry[]
 
   @@map("organizations")
 }
@@ -160,4 +162,31 @@ model ReputationScore {
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
 
   @@map("reputation_scores")
+}
+
+model BillingSubscription {
+  id        String   @id @default(uuid()) @db.Uuid
+  orgId     String   @unique @map("org_id") @db.Uuid
+  planTier  String   @map("plan_tier")
+  status    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+
+  @@map("billing_subscriptions")
+}
+
+model FeeLedgerEntry {
+  id        String   @id @default(uuid()) @db.Uuid
+  orgId     String   @map("org_id") @db.Uuid
+  amount    Int // Stored in cents
+  currency  String   @default("USD")
+  type      String // e.g., 'cohort_search_fee', 'access_request_fee'
+  status    String // e.g., 'pending', 'settled', 'failed'
+  createdAt DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+
+  @@map("fee_ledger_entries")
 }
