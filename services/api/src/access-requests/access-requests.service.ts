@@ -74,6 +74,10 @@ export class AccessRequestsService {
       note: payload.note
     });
 
+    // Enqueue an access request decision notification asynchronously
+    // BullMQ/Queue implementation is abstracted for MVP hook
+    console.log(`[Notification Hook] Enqueueing access_request_${payload.decision} for org ${request.requestingOrgId}`);
+
     return updated;
   }
 
