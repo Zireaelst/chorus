@@ -4,9 +4,18 @@
 import { Module } from '@nestjs/common'
 import { AuthModule } from './auth/auth.module';
 import { AuditModule } from './audit/audit.module';
+import { OrgsModule } from './orgs/orgs.module';
+import { CohortsModule } from './cohorts/cohorts.module';
+import { DeveloperModule } from './developer/developer.module';
 
 @Module({
-  imports: [AuthModule, AuditModule],
+  imports: [
+    AuthModule, 
+    AuditModule,
+    OrgsModule,
+    CohortsModule,
+    DeveloperModule
+  ],
   controllers: [],
   providers: [],
 })
