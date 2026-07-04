@@ -1,0 +1,14 @@
+{
+  "name": "@chorus/node",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Chorus Node runtime — local training harness + proof generation. Deployed inside hospital infrastructure. Source: SYSTEM_ARCHITECTURE.md. Full implementation v0.8.",
+  "main": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@chorus/config": "workspace:*",
+    "typescript": "^5.6.3"
+  }
+}
