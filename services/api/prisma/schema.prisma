@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Organization {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  type         String   // Enforced via Postgres CHECK constraint
+  workosOrgId  String   @unique @map("workos_org_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  memberships Memberships[]
+  auditLogs   AuditLog[]
+
+  @@map("organizations")
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  workosUserId String   @unique @map("workos_user_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  memberships Memberships[]
+  auditLogs   AuditLog[]
+
+  @@map("users")
+}
+
+model Memberships {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  orgId     String   @map("org_id") @db.Uuid
+  role      String   // Enforced via Postgres CHECK constraint
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, orgId])
+  @@map("memberships")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  actorUserId String   @map("actor_user_id") @db.Uuid
+  orgId       String   @map("org_id") @db.Uuid
+  eventType   String   @map("event_type")
+  metadata    Json
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  actor        User         @relation(fields: [actorUserId], references: [id], onDelete: Restrict)
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+
+  @@index([orgId, createdAt])
+  @@map("audit_log")
+}
