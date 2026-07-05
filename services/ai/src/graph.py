@@ -1,44 +1,47 @@
-from typing import TypedDict, Optional
-from langgraph.graph import StateGraph, START, END
+from typing import Any, cast
+from typing import TypedDict
 
-from src.guardrails.pii_filter import scan_for_pii
-from src.agents.extraction import run_extraction, CohortCriteria
+from langgraph.graph import END, START, StateGraph
+
 from src.agents.ambiguity import run_ambiguity_check
+from src.agents.extraction import CohortCriteria, run_extraction
+from src.guardrails.pii_filter import scan_for_pii
 
-class CopilotState(TypedDict):
+
+class CopilotState(TypedDict, total=False):
     description: str
-    existing_criteria: Optional[dict]
-    
-    suggested_criteria: Optional[CohortCriteria]
+    existing_criteria: dict[str, Any] | None
+    suggested_criteria: CohortCriteria | None
     ambiguous_fields: list[str]
-    error: Optional[str]
+    error: str | None
 
-def filter_node(state: CopilotState):
+def filter_node(state: CopilotState) -> dict[str, Any]:
     """Entry node: PII filter."""
     try:
         scan_for_pii(state["description"])
     except Exception as e:
         return {"error": str(e)}
-    return {}
+    return cast(dict[str, Any], {})
 
-def extraction_node(state: CopilotState):
+def extraction_node(state: CopilotState) -> dict[str, Any]:
     """Runs criteria extraction."""
     if state.get("error"):
-        return state
-        
-    res = run_extraction(state["description"], state.get("existing_criteria"))
-    return {"suggested_criteria": res}
+        return cast(dict[str, Any], state)
 
-def ambiguity_node(state: CopilotState):
+    res = run_extraction(state["description"], state.get("existing_criteria"))
+    return cast(dict[str, Any], {"suggested_criteria": res})
+
+def ambiguity_node(state: CopilotState) -> dict[str, Any]:
     """Runs ambiguity check on extracted criteria."""
     if state.get("error"):
-        return state
-        
-    crit = state["suggested_criteria"].model_dump()
-    res = run_ambiguity_check(state["description"], crit)
-    return {"ambiguous_fields": res.ambiguousFields}
+        return cast(dict[str, Any], state)
 
-def router_after_filter(state: CopilotState):
+    crit_obj = state.get("suggested_criteria")
+    crit = crit_obj.model_dump() if crit_obj else {}
+    res = run_ambiguity_check(state["description"], crit)
+    return cast(dict[str, Any], {"ambiguous_fields": res.ambiguousFields})
+
+def router_after_filter(state: CopilotState) -> str:
     if state.get("error"):
         return "human_review"
     return "extract"
@@ -51,10 +54,10 @@ builder.add_node("filter", filter_node)
 builder.add_node("extract", extraction_node)
 builder.add_node("ambiguity", ambiguity_node)
 
-# We use a dummy node for human_review to represent the gate, 
+# We use a dummy node for human_review to represent the gate,
 # which simply ends the graph for the API to return the payload.
-def human_review_gate(state: CopilotState):
-    return state
+def human_review_gate(state: CopilotState) -> dict[str, Any]:
+    return cast(dict[str, Any], state)
 builder.add_node("human_review", human_review_gate)
 
 # Build edges

@@ -23,18 +23,18 @@ def scan_for_pii(text: str) -> None:
     """
     if SSN_PATTERN.search(text):
         raise PIIDetectedError("SSN detected")
-    
+
     if DOB_PATTERN.search(text):
         raise PIIDetectedError("Date of Birth detected")
-        
+
     if MRN_PATTERN.search(text):
         raise PIIDetectedError("MRN detected")
-        
+
     if EMAIL_PATTERN.search(text):
         raise PIIDetectedError("Email detected")
-        
+
     if PHONE_PATTERN.search(text):
         raise PIIDetectedError("Phone number detected")
-        
+
     # If clean, return None
     return None
