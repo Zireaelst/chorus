@@ -9,31 +9,41 @@ const items = [
 
 export function TrustList() {
   return (
-    <section className="w-full py-24 sm:py-32 flex flex-col items-center">
-      <div className="w-full max-w-4xl px-4">
-        <ol className="space-y-6 sm:space-y-8">
-          {items.map((text, index) => (
-            <li 
-              key={index} 
-              className="group relative flex items-start text-h2 font-medium text-text-secondary transition-colors hover:text-text-primary"
+    <section className="relative w-full px-6 md:px-16 py-32 flex justify-center border-t border-white/5">
+      <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px] pointer-events-none" />
+      
+      <div className="relative w-full max-w-5xl flex flex-col gap-16">
+        
+        <div className="text-center">
+          <h2 className="text-3xl md:text-5xl font-medium text-white tracking-tight mb-4">Our Core Promises</h2>
+          <p className="text-white/60 max-w-2xl mx-auto leading-relaxed">
+            Chorus is designed from the ground up to protect your hospital's liability. We operate under a strict, cryptographically enforced zero-trust policy.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {items.map((item, i) => (
+            <div 
+              key={item} 
+              className="group relative h-48 rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-[0_8px_30px_rgba(255,255,255,0.05)] hover:-translate-y-1"
             >
-              <span className="mr-6 tabular-nums opacity-50">
-                {(index + 1).toString().padStart(2, '0')}
-              </span>
-              <span className="relative">
-                {text}
-                {/* 
-                  Redaction-style strikethrough that appears on hover, 
-                  but text remains legible beneath (refusal, not vague promise).
-                */}
-                <span 
-                  className="absolute top-1/2 left-0 w-full h-[10%] bg-text-primary origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-reveal ease-out opacity-80" 
-                  aria-hidden="true"
-                />
-              </span>
-            </li>
+              {/* Giant Background Number */}
+              <div className="absolute -bottom-8 -right-4 text-[120px] font-mono font-bold text-white/[0.03] leading-none pointer-events-none group-hover:text-white/[0.06] transition-colors duration-500">
+                {String(i + 1).padStart(2, "0")}
+              </div>
+
+              {/* Glowing Line */}
+              <div className="absolute top-0 left-0 w-1 h-0 bg-accent-verify transition-all duration-500 ease-out group-hover:h-full opacity-0 group-hover:opacity-100 shadow-[0_0_15px_var(--color-accent-verify)]" />
+
+              {/* Content */}
+              <div className="relative z-10 w-full h-full p-8 flex items-center">
+                <p className="text-lg md:text-xl font-medium text-white/90 leading-tight">
+                  {item}
+                </p>
+              </div>
+            </div>
           ))}
-        </ol>
+        </div>
       </div>
     </section>
   )
