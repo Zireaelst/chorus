@@ -3,6 +3,9 @@ import { ApiKeysService } from './api-keys.service';
 import { RbacGuard } from '../auth/rbac.guard';
 import { Roles } from '../auth/roles.decorator';
 import { FastifyRequest } from 'fastify';
+import { UseInterceptors } from '@nestjs/common';
+import { RequiresIdempotencyKey } from '../common/idempotency/requires-idempotency-key.decorator';
+import { IdempotencyInterceptor } from '../common/idempotency/idempotency.interceptor';
 
 @Controller('v1/orgs/:orgId/api-keys')
 export class ApiKeysController {
@@ -11,6 +14,8 @@ export class ApiKeysController {
   @Post()
   @UseGuards(RbacGuard)
   @Roles('hospital_admin')
+  @RequiresIdempotencyKey()
+  @UseInterceptors(IdempotencyInterceptor)
   async createApiKey(
     @Param('orgId') orgId: string,
     @Body() body: { name: string },

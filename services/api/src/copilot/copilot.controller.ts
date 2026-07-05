@@ -1,5 +1,6 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { CopilotService } from './copilot.service';
+import { CopilotQuotaGuard } from '../common/rate-limit/copilot-quota.guard';
 import { RbacGuard } from '../auth/rbac.guard';
 import { Roles } from '../auth/roles.decorator';
 import { CopilotDraftRequest, ComplianceCheckRequest } from '@chorus/types';
@@ -9,14 +10,14 @@ export class CopilotController {
   constructor(private readonly copilotService: CopilotService) {}
 
   @Post('cohort-draft')
-  @UseGuards(RbacGuard)
+  @UseGuards(RbacGuard, CopilotQuotaGuard)
   @Roles('hospital_admin', 'compliance_officer', 'sponsor')
   async cohortDraft(@Body() body: CopilotDraftRequest) {
     return this.copilotService.getCohortDraft(body);
   }
 
   @Post('compliance-check')
-  @UseGuards(RbacGuard)
+  @UseGuards(RbacGuard, CopilotQuotaGuard)
   @Roles('hospital_admin', 'compliance_officer', 'sponsor')
   async complianceCheck(@Body() body: ComplianceCheckRequest) {
     return this.copilotService.getComplianceCheck(body);

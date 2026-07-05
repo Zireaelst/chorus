@@ -11,6 +11,7 @@ import { CopilotModule } from './copilot/copilot.module';
 import { AccessRequestsModule } from './access-requests/access-requests.module';
 import { ComplianceModule } from './compliance/compliance.module';
 import { DisputesModule } from './disputes/disputes.module';
+import { ProofsModule } from './proofs/proofs.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { DisputesModule } from './disputes/disputes.module';
     CopilotModule,
     AccessRequestsModule,
     ComplianceModule,
-    DisputesModule
+    DisputesModule,
+    ProofsModule
   ],
   controllers: [],
   providers: [],

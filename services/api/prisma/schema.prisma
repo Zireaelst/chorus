@@ -24,6 +24,7 @@ model Organization {
   feeLedgerEntries    FeeLedgerEntry[]
   notifications       Notification[]
   disclosureQueries   DisclosureQuery[]
+  contributions       Contribution[]
 
   @@map("organizations")
 }
@@ -88,6 +89,7 @@ model Cohort {
 
   accessRequests CohortAccessRequest[]
   modelCheckpoints ModelCheckpoint[]
+  contributions Contribution[]
 
   @@index([orgId, status])
   @@map("cohorts")
@@ -262,4 +264,24 @@ model Dispute {
   @@index([status])
   @@index([subjectType, subjectId])
   @@map("disputes")
+}
+
+// UNDOCUMENTED ADDITION: Sprint 24 missing schema addition per DATABASE_DESIGN.md
+model Contribution {
+  id             String    @id @default(uuid()) @db.Uuid
+  cohortId       String    @map("cohort_id") @db.Uuid
+  orgId          String    @map("org_id") @db.Uuid
+  roundNumber    Int       @map("round_number")
+  status         String
+  onChainTxRef   String?   @map("on_chain_tx_ref")
+  proofRefHash   String?   @map("proof_ref_hash")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  verifiedAt     DateTime? @map("verified_at")
+
+  cohort       Cohort       @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+
+  @@unique([cohortId, orgId, roundNumber], map: "unique_contribution_per_round")
+  @@index([orgId, verifiedAt])
+  @@map("contributions")
 }

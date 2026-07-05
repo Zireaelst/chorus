@@ -14,6 +14,7 @@ import {
 import { AppModule } from './app.module'
 
 import fastifyCookie from '@fastify/cookie';
+import { RateLimitGuard } from './common/rate-limit/rate-limit.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -24,6 +25,8 @@ async function bootstrap() {
   await app.register(fastifyCookie as any, {
     secret: process.env.COOKIE_SECRET || 'fallback-secret-for-dev', 
   });
+
+  app.useGlobalGuards(new RateLimitGuard());
 
   const port = process.env['PORT'] ?? 4000
   await app.listen(port, '0.0.0.0')
