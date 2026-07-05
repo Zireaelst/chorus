@@ -1,0 +1,6 @@
+{
+  "projectId": "chorus-ui",
+  "storybookBuildDir": "storybook-static",
+  "zip": true,
+  "exitZeroOnChanges": true
+}
