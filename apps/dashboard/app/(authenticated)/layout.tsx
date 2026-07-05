@@ -26,6 +26,15 @@ export default async function AuthenticatedLayout({
       redirect('/login');
     }
 
+    const data = await res.json();
+    const user = data.user;
+    
+    // Explicit server-side role check: regulators cannot access apps/dashboard
+    const isRegulator = user?.memberships?.some((m: any) => m.role === 'regulator');
+    if (isRegulator) {
+      redirect('/login?error=unauthorized_role');
+    }
+
     // We have a valid user, proceed to render children (authenticated dashboard)
   } catch (error) {
     // In case API is down, redirect to login or show error

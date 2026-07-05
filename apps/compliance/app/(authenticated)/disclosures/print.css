@@ -1,0 +1,43 @@
+@media print {
+  /* Hide navigation chrome, query form, and export buttons */
+  header, 
+  nav,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Reset layout margins for full-page print */
+  body, main {
+    background-color: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Ensure text is strictly black and white */
+  * {
+    color: black !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Use tabular and mono layout */
+  .font-mono {
+    font-family: var(--font-mono), monospace !important;
+    font-variant-numeric: tabular-nums !important;
+  }
+
+  /* Adjust borders for print clarity */
+  .border,
+  .border-b,
+  .border-border-hairline {
+    border-color: #000 !important;
+  }
+
+  /* Page breaks for clean layout */
+  .break-inside-avoid {
+    break-inside: avoid;
+  }
+}
