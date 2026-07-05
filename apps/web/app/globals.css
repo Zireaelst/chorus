@@ -65,6 +65,11 @@
 html {
   /* Prevent layout shift from scrollbar appearing */
   scrollbar-gutter: stable;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
 }
 
 body {
@@ -75,6 +80,11 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.hero-title {
+  letter-spacing: -0.04em;
+  line-height: 0.95;
 }
 
 /* ── Focus ring — FRONTEND_GUIDELINES.md: "visible focus ring using --color-border-strong" */
