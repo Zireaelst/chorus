@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import dynamic from 'next/dynamic'
 
 import { Hero } from './components/Hero'
 import { ProblemStatement } from './components/ProblemStatement'
@@ -8,11 +7,8 @@ import { AudienceTriage } from './components/AudienceTriage'
 import { HonestStatus } from './components/HonestStatus'
 import { DisclosureDemo } from './components/DisclosureDemo'
 import { ClosingCTA } from './components/ClosingCTA'
-
-// Dynamically import GSAP-heavy mechanism scene to keep it out of initial JS payload.
-const MechanismScene = dynamic(() => import('./components/MechanismScene'), {
-  ssr: false,
-})
+import { ProductShowcase } from './components/ProductShowcase'
+import { ElegantBackground } from './components/ElegantBackground'
 
 export const metadata: Metadata = {
   title: 'Chorus — Prove your hospital\'s data is eligible. Without showing anyone what it says.',
@@ -23,24 +19,26 @@ export default function HomePage() {
   const docsUrl = process.env.DOCS_URL || 'http://localhost:3001'
   
   return (
-    <main className="min-h-screen bg-surface flex flex-col items-center">
+    <main className="min-h-screen bg-canvas flex flex-col w-full">
       <Hero />
-      <ProblemStatement />
-      <MechanismScene />
-      <TrustList />
-      <AudienceTriage />
-      <HonestStatus />
-      <DisclosureDemo />
-      <ClosingCTA />
-      
-      <div className="w-full text-center pb-12 pt-8">
-        <a 
-          href={docsUrl} 
-          className="text-sm text-text-secondary hover:text-text-primary transition-colors underline underline-offset-4"
-        >
-          View Developer Documentation
-        </a>
-      </div>
+      <ElegantBackground>
+        <ProblemStatement />
+        <ProductShowcase />
+        <TrustList />
+        <AudienceTriage />
+        <HonestStatus />
+        <DisclosureDemo />
+        <ClosingCTA />
+        
+        <footer className="px-6 md:px-16 py-6 border-t border-border-hairline flex justify-center sm:justify-start">
+          <a 
+            href={docsUrl} 
+            className="text-small text-text-secondary hover:text-text-primary transition-colors"
+          >
+            View Developer Documentation
+          </a>
+        </footer>
+      </ElegantBackground>
     </main>
   )
 }
