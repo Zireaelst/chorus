@@ -23,6 +23,7 @@ model Organization {
   billingSubscription BillingSubscription?
   feeLedgerEntries    FeeLedgerEntry[]
   notifications       Notification[]
+  disclosureQueries   DisclosureQuery[]
 
   @@map("organizations")
 }
@@ -233,4 +234,16 @@ model Notification {
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
 
   @@map("notifications")
+}
+
+model DisclosureQuery {
+  id             String   @id @default(uuid()) @db.Uuid
+  regulatorOrgId String   @map("regulator_org_id") @db.Uuid
+  scope          Json
+  resultSummary  Json     @map("result_summary")
+  executedAt     DateTime @default(now()) @map("executed_at")
+
+  regulatorOrg Organization @relation(fields: [regulatorOrgId], references: [id], onDelete: Restrict)
+
+  @@map("disclosure_queries")
 }
