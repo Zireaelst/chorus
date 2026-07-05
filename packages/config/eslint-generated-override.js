@@ -3,7 +3,10 @@ module.exports = {
   overrides: [
     {
       // Target only the exact generated code output path
-      files: ['packages/contracts-client/src/generated/**/*.ts'],
+      files: [
+        'packages/contracts-client/src/generated/**/*.ts',
+        'packages/design-tokens/build/**'
+      ],
       rules: {
         // Exempted because generated schemas define their own casing constraints
         '@typescript-eslint/naming-convention': 'off',

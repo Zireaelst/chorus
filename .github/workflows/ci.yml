@@ -138,3 +138,61 @@ jobs:
 
       - name: Audit Node.js dependencies
         run: pnpm audit --audit-level=high
+
+  # ── Visual Regression ──────────────────────────────────────────────────────
+  chromatic:
+    name: Chromatic Visual Regression
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: packages/ui/**
+
+      - name: Run Chromatic
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: pnpm exec chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --exit-zero-on-changes --build-script-name=build-storybook
+        working-directory: packages/ui
+
+  # ── Design Tokens Drift Check ──────────────────────────────────────────────
+  tokens-drift:
+    name: Design Tokens Drift Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Rebuild design tokens
+        run: pnpm --filter @chorus/design-tokens run build
+
+      - name: Check for uncommitted changes
+        run: git diff --exit-code packages/design-tokens/build/ || (echo "Design tokens are out of sync. Please run pnpm --filter @chorus/design-tokens run build and commit the changes." && exit 1)
