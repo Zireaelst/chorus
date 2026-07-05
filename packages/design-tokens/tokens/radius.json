@@ -1,0 +1,8 @@
+{
+  "radius": {
+    "sm": { "value": "4px" },
+    "base": { "value": "6px" },
+    "lg": { "value": "12px" },
+    "pill": { "value": "9999px" }
+  }
+}

@@ -1,0 +1,29 @@
+/*
+ * DO NOT EDIT — generated from packages/design-tokens/tokens/
+ */
+
+:root {
+  --color-canvas: #F5F4F0;
+  --color-surface: #EDEBE4;
+  --color-border-hairline: #D8D6CE;
+  --color-border-strong: #8A8778;
+  --color-text-primary: #0A0A0A;
+  --color-text-secondary: #6B6960;
+  --color-accent-verify: #C97A3D;
+  --color-status-error: #9B3B34;
+  --color-status-warning: #9C7A2E;
+  --color-status-success: #4B7A5E;
+}
+
+.dark {
+  --color-canvas: #0A0A0A;
+  --color-surface: #17161A;
+  --color-border-hairline: #2B2924;
+  --color-border-strong: #635F55;
+  --color-text-primary: #F5F4F0;
+  --color-text-secondary: #9C9A90;
+  --color-accent-verify: #C97A3D;
+  --color-status-error: #C2564D;
+  --color-status-warning: #C79A46;
+  --color-status-success: #6FA184;
+}
