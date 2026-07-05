@@ -247,3 +247,19 @@ model DisclosureQuery {
 
   @@map("disclosure_queries")
 }
+
+// UNDOCUMENTED ADDITION: Sprint 21 Dispute Resolution
+model Dispute {
+  id             String   @id @default(uuid()) @db.Uuid
+  subjectType    String   @map("subject_type")
+  subjectId      String   @map("subject_id")
+  status         String
+  description    String
+  resolutionNote String?  @map("resolution_note")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([subjectType, subjectId])
+  @@map("disputes")
+}
