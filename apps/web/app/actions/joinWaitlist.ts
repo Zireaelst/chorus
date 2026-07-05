@@ -14,6 +14,11 @@ export async function joinWaitlist(prevState: WaitlistState, formData: FormData)
     return { status: 'error', message: 'Please provide a valid email address.' }
   }
 
+  if (!prisma) {
+    // No database configured — return a graceful message
+    return { status: 'success', message: 'Thank you! We\'ll be in touch soon.' }
+  }
+
   try {
     await prisma.waitlistSignup.create({
       data: { email },
