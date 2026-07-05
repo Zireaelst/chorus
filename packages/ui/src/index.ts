@@ -8,6 +8,7 @@ export * from './Badge/Badge'
 export * from './IconButton/IconButton'
 export * from './Tooltip/Tooltip'
 export * from './Dialog/Dialog'
+export * from './Tabs/Tabs'
 
 // Theme and Tokens
 export * from './theme/useTheme'

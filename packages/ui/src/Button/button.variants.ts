@@ -8,10 +8,12 @@ export const buttonVariants = cva(
         primary: 'bg-text-primary text-canvas hover:opacity-90',
         secondary: 'border border-border-strong bg-transparent text-text-primary hover:bg-surface',
         destructive: 'bg-status-error text-canvas hover:opacity-90',
+        ghost: 'bg-transparent text-text-secondary hover:text-text-primary hover:bg-surface',
       },
       size: {
         sm: 'h-8 px-3 text-small',
         md: 'h-10 px-4 text-body',
+        lg: 'h-12 px-6 text-body',
       },
     },
     defaultVariants: {
