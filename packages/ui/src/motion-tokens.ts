@@ -13,6 +13,12 @@ export const motion = {
     reveal: 0.4, // --dur-reveal: redaction reveal/conceal (the brand's signature interaction)
     scene: 0.7, // --dur-scene: scroll-driven scene steps — marketing site only
   },
+  reducedDuration: {
+    fast: 0,
+    base: 0,
+    reveal: 0,
+    scene: 0,
+  },
   ease: {
     // Standard ease-out — used for all transitions except verify
     standard: [0.4, 0, 0.2, 1] as [number, number, number, number],

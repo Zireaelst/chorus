@@ -2,6 +2,7 @@ import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 
 import { cn } from "../utils"
+import { useReducedMotion } from "../hooks/useReducedMotion"
 
 const Tabs = TabsPrimitive.Root
 
@@ -23,16 +24,20 @@ TabsList.displayName = TabsPrimitive.List.displayName
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, ref) => {
+  const reducedMotion = useReducedMotion()
+  return (
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-small font-medium ring-offset-canvas transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-canvas data-[state=active]:text-text-primary data-[state=active]:border data-[state=active]:border-border-strong",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-small font-medium ring-offset-canvas focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-strong focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-canvas data-[state=active]:text-text-primary data-[state=active]:border data-[state=active]:border-border-strong",
+      reducedMotion ? "transition-none" : "transition-all",
       className
     )}
     {...props}
   />
-))
+  )
+})
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
 
 const TabsContent = React.forwardRef<

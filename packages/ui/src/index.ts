@@ -7,6 +7,7 @@ export * from './Input/Input'
 export * from './Badge/Badge'
 export * from './IconButton/IconButton'
 export * from './Tooltip/Tooltip'
+export * from './hooks/useReducedMotion'
 export * from './Dialog/Dialog'
 export * from './Tabs/Tabs'
 

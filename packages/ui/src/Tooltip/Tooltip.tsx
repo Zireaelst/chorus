@@ -3,6 +3,7 @@
 import * as React from 'react'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 import { cn } from '../utils'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 
 const TooltipProvider = TooltipPrimitive.Provider
 const TooltipRoot = TooltipPrimitive.Root
@@ -34,8 +35,9 @@ export function Tooltip({
   content,
   ...props
 }: TooltipProps) {
+  const reducedMotion = useReducedMotion()
   return (
-    <TooltipProvider delayDuration={200}>
+    <TooltipProvider delayDuration={reducedMotion ? 0 : 200}>
       <TooltipRoot {...props}>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent>{content}</TooltipContent>

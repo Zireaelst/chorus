@@ -11,6 +11,12 @@ export const motion = {
     reveal: 0.4, 
     scene: 0.7 
   },
+  reducedDuration: {
+    fast: 0,
+    base: 0,
+    reveal: 0,
+    scene: 0,
+  },
   ease: {
     standard: [0.4, 0, 0.2, 1],
     verify: [0.34, 1.56, 0.64, 1],
