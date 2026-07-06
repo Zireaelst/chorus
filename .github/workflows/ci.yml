@@ -196,3 +196,64 @@ jobs:
 
       - name: Check for uncommitted changes
         run: git diff --exit-code packages/design-tokens/build/ || (echo "Design tokens are out of sync. Please run pnpm --filter @chorus/design-tokens run build and commit the changes." && exit 1)
+
+  # ── Accessibility (Storybook) ──────────────────────────────────────────────
+  storybook-a11y:
+    name: Storybook axe-core
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Storybook a11y tests
+        run: pnpm --filter @chorus/ui exec test-storybook
+        
+  # ── Lighthouse CI (Web) ────────────────────────────────────────────────────
+  lighthouse-ci:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: apps/web/**
+
+      - name: Build web app
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: pnpm --filter @chorus/web build
+
+      - name: Run Lighthouse CI
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: npx @lhci/cli autosite --config=apps/web/lighthouserc.js
+        working-directory: apps/web
