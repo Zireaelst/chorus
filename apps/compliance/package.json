@@ -11,10 +11,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@chorus/auth-client": "workspace:*",
     "@chorus/config": "workspace:*",
     "@chorus/types": "workspace:*",
     "@chorus/ui": "workspace:*",
-    "@chorus/auth-client": "workspace:*",
+    "@sentry/nextjs": "^10.63.0",
     "next": "15.0.3",
     "react": "19.0.0",
     "react-dom": "19.0.0"
