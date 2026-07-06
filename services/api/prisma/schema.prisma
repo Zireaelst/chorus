@@ -25,6 +25,7 @@ model Organization {
   notifications       Notification[]
   disclosureQueries   DisclosureQuery[]
   contributions       Contribution[]
+  payouts             Payout[]
 
   @@map("organizations")
 }
@@ -280,8 +281,24 @@ model Contribution {
 
   cohort       Cohort       @relation(fields: [cohortId], references: [id], onDelete: Restrict)
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  payout       Payout?
 
   @@unique([cohortId, orgId, roundNumber], map: "unique_contribution_per_round")
   @@index([orgId, verifiedAt])
   @@map("contributions")
+}
+
+model Payout {
+  id             String   @id @default(uuid()) @db.Uuid
+  contributionId String   @unique @map("contribution_id") @db.Uuid
+  orgId          String   @map("org_id") @db.Uuid
+  amount         Decimal  @db.Decimal
+  currency       String   // PROVISIONAL: pending decision from pending-decisions-ledger
+  onChainTxRef   String   @map("on_chain_tx_ref")
+  settledAt      DateTime @map("settled_at")
+
+  contribution   Contribution @relation(fields: [contributionId], references: [id], onDelete: Restrict)
+  organization   Organization @relation(fields: [orgId], references: [id], onDelete: Restrict)
+
+  @@map("payouts")
 }
