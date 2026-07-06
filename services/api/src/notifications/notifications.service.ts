@@ -12,13 +12,13 @@ export class ApiNotificationsService {
         });
     }
 
-    async markAsRead(userId: string, notificationId: string) {
+    async markAsRead(userId: string, orgId: string, notificationId: string) {
         const notification = await this.prisma.notification.findUnique({
             where: { id: notificationId }
         });
 
-        // Enforce strict scoping to requesting user
-        if (!notification || notification.userId !== userId) {
+        // Enforce strict scoping to requesting user and org
+        if (!notification || notification.userId !== userId || notification.orgId !== orgId) {
             throw new NotFoundException('Notification not found');
         }
 

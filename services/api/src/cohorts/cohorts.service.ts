@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { cohortCriteriaSchema } from '@chorus/types';
 
 @Injectable()
 export class CohortsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly audit: AuditService,
+  ) {}
 
   async createCohort(orgId: string, actorUserId: string, data: { title: string; criteria: any }) {
     if (!data.title) {
@@ -91,7 +95,13 @@ export class CohortsService {
     });
   }
 
-  async submitCohort(cohortId: string, orgId: string) {
+  async checkBlockingFlags(cohortId: string): Promise<boolean> {
+    // In a real implementation, we would query the compliance engine here to check for blocking flags.
+    // Assuming 'unresolvedComplianceFlags' is stored or queried. For MVP, we simulate this guard.
+    return false; // Mocked for now, assume valid.
+  }
+
+  async submitCohort(cohortId: string, orgId: string, actorUserId: string) {
     const existing = await this.prisma.cohort.findUnique({ where: { id: cohortId } });
     
     if (!existing || existing.orgId !== orgId) {
@@ -99,20 +109,25 @@ export class CohortsService {
     }
 
     if (existing.status !== 'draft') {
-      throw new ConflictException({ error: { code: 'COHORT_NOT_IN_DRAFT', message: 'Only draft cohorts can be submitted' } });
+      throw new ConflictException({ error: { code: 'INVALID_STATE', message: 'Only draft cohorts can be submitted' } });
     }
 
-    // In a real implementation, we would query the compliance engine here to check for blocking flags.
-    // Assuming 'unresolvedComplianceFlags' is stored or queried. For MVP, we simulate this guard.
-    const hasUnresolvedBlockingFlags = false; // Mocked for now, assume valid.
+    const hasUnresolvedBlockingFlags = await this.checkBlockingFlags(cohortId);
     
     if (hasUnresolvedBlockingFlags) {
-      throw new ConflictException({ error: { code: 'UNRESOLVED_COMPLIANCE_FLAGS', message: 'Cohort cannot be submitted with unresolved blocking compliance flags' } });
+      throw new ConflictException({ error: { code: 'UNRESOLVED_FLAGS', message: 'Cohort cannot be submitted with unresolved blocking compliance flags' } });
     }
 
     const updated = await this.prisma.cohort.update({
       where: { id: cohortId },
       data: { status: 'submitted' },
+    });
+
+    await this.audit.logEvent({
+      actorUserId,
+      orgId,
+      eventType: 'cohort.submitted',
+      metadata: { cohortId },
     });
 
     // Enqueue circuit generation job here

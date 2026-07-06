@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException, UnprocessableEntityException } from '@nestjs/common';
-import { CopilotDraftRequest, CopilotDraftResponse, ComplianceCheckRequest, ComplianceCheckResponse } from '@chorus/types';
+import { CopilotDraftRequest, CopilotDraftResponse, ComplianceCheckRequest, ComplianceCheckResponse, complianceCheckResponseSchema } from '@chorus/types';
 
 @Injectable()
 export class CopilotService {
@@ -53,9 +53,23 @@ export class CopilotService {
       }
 
       const data = await response.json();
-      return data as ComplianceCheckResponse;
+      
+      const parsedData = complianceCheckResponseSchema.safeParse(data);
+      if (!parsedData.success) {
+        throw new InternalServerErrorException('AI Compliance Check returned invalid data format');
+      }
+
+      const validatedResponse = parsedData.data;
+
+      // Flags without a grounded citation are suppressed per Sprint 30 and AI_ARCHITECTURE.md
+      validatedResponse.flags = validatedResponse.flags.filter(
+        (flag) => flag.citation && flag.citation.trim().length > 0
+      );
+
+      return validatedResponse;
       
     } catch (error) {
+      if (error instanceof InternalServerErrorException) throw error;
       throw new InternalServerErrorException('Failed to communicate with AI service');
     }
   }

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
-import { MembershipRole } from '@chorus/types';
+import { MembershipRole, inviteSchema } from '@chorus/types';
 
 const ORG_TYPE_ROLES: Record<string, string[]> = {
   hospital: ['hospital_admin', 'clinician', 'compliance_officer'],
@@ -70,6 +70,11 @@ export class OrgsService {
   }
 
   async inviteMember(orgId: string, actorUserId: string, email: string, role: string) {
+    const parseResult = inviteSchema.safeParse({ email, role });
+    if (!parseResult.success) {
+      throw new BadRequestException({ error: { code: 'VALIDATION_ERROR', message: 'Invalid email or role format' } });
+    }
+
     const org = await this.getOrg(orgId);
 
     const validRoles = ORG_TYPE_ROLES[org.type] || [];

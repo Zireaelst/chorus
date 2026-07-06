@@ -18,7 +18,7 @@ export class CopilotController {
 
   @Post('compliance-check')
   @UseGuards(RbacGuard, CopilotQuotaGuard)
-  @Roles('hospital_admin', 'compliance_officer', 'sponsor')
+  @Roles('hospital_admin', 'compliance_officer')
   async complianceCheck(@Body() body: ComplianceCheckRequest) {
     return this.copilotService.getComplianceCheck(body);
   }

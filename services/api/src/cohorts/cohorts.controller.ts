@@ -55,6 +55,7 @@ export class CohortsController {
     @Req() req: FastifyRequest & { user?: any }
   ) {
     const orgId = req.user?.memberships[0]?.orgId;
-    return this.cohortsService.submitCohort(id, orgId);
+    const actorUserId = req.user?.id || 'system';
+    return this.cohortsService.submitCohort(id, orgId, actorUserId);
   }
 }

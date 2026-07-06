@@ -12,6 +12,8 @@ import { AccessRequestsModule } from './access-requests/access-requests.module';
 import { ComplianceModule } from './compliance/compliance.module';
 import { DisputesModule } from './disputes/disputes.module';
 import { ProofsModule } from './proofs/proofs.module';
+import { PayoutsModule } from './payouts/payouts.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -24,7 +26,9 @@ import { ProofsModule } from './proofs/proofs.module';
     AccessRequestsModule,
     ComplianceModule,
     DisputesModule,
-    ProofsModule
+    ProofsModule,
+    PayoutsModule,
+    NotificationsModule
   ],
   controllers: [],
   providers: [],

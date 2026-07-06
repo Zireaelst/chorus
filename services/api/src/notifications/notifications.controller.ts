@@ -24,6 +24,7 @@ export class NotificationsController {
         @Param('id') notificationId: string
     ) {
         const userId = req.user?.id;
-        return this.notificationsService.markAsRead(userId, notificationId);
+        const orgId = req.user?.memberships?.[0]?.orgId;
+        return this.notificationsService.markAsRead(userId, orgId, notificationId);
     }
 }

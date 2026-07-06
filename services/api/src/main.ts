@@ -15,6 +15,10 @@ import { AppModule } from './app.module'
 
 import fastifyCookie from '@fastify/cookie';
 import { RateLimitGuard } from './common/rate-limit/rate-limit.guard';
+import * as Sentry from '@sentry/node';
+import { nodeProfilingIntegration } from '@sentry/profiling-node';
+import { SentryExceptionFilter } from './common/filters/sentry.filter';
+import { HttpAdapterHost } from '@nestjs/core';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -22,11 +26,25 @@ async function bootstrap() {
     new FastifyAdapter(),
   )
 
+  if (process.env.SENTRY_DSN) {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      integrations: [
+        nodeProfilingIntegration(),
+      ],
+      tracesSampleRate: 1.0,
+      profilesSampleRate: 1.0,
+    });
+  }
+
   await app.register(fastifyCookie as any, {
     secret: process.env.COOKIE_SECRET || 'fallback-secret-for-dev', 
   });
 
   app.useGlobalGuards(new RateLimitGuard());
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new SentryExceptionFilter(httpAdapter));
 
   const port = process.env['PORT'] ?? 4000
   await app.listen(port, '0.0.0.0')
