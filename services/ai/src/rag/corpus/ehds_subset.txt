@@ -1,0 +1,13 @@
+EHDS - Article 34
+Purposes for which electronic health data can be processed for secondary use
+
+1. Health Data Access Bodies shall provide access to electronic health data referred to in Article 33 where the intended purpose of processing pursued by the applicant complies with one or more of the following purposes:
+(f) development and innovation activities for products or services contributing to public health or social security, or ensuring high levels of quality and safety of health care, of medicinal products or of medical devices;
+(g) training, testing and evaluating of algorithms, including in medical devices, AI systems and digital health applications, contributing to the public health or social security, or ensuring high levels of quality and safety of health care, of medicinal products or of medical devices.
+
+EHDS - Article 44
+Data minimisation and anonymisation
+
+1. Health Data Access Bodies shall ensure that access is only provided to requested electronic health data relevant for the purpose of processing indicated in the data permit request and in line with the data minimisation principle.
+2. Health Data Access Bodies shall provide the electronic health data in an anonymised format, where the purpose of processing by the data user can be achieved with such data.
+3. Where the purpose of the data user's processing cannot be achieved with anonymised data, the Health Data Access Bodies shall provide access to electronic health data in pseudonymised format. The information necessary to reverse the pseudonymisation shall be available only to the Health Data Access Body. Data users shall not re-identify the electronic health data provided to them in pseudonymised format.

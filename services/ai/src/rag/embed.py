@@ -41,7 +41,7 @@ def build_index() -> None:
                 texts.append(chunk)
                 jurisdiction = (
                     "us" if "hipaa" in file_path.name.lower()
-                    else "eu" if "gdpr" in file_path.name.lower()
+                    else "eu" if "gdpr" in file_path.name.lower() or "ehds" in file_path.name.lower()
                     else "unknown"
                 )
                 metadata.append({
