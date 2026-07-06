@@ -20,7 +20,7 @@ export default function OrgSettingsPage() {
           <Input id="contact-email" type="email" placeholder="admin@example.com" />
         </div>
 
-        <Button variant="primary" type="submit">
+        <Button intent="primary" type="submit">
           Save Settings
         </Button>
       </form>
@@ -35,7 +35,7 @@ export default function OrgSettingsPage() {
             <div className="flex items-center gap-4">
                 <span className="font-semibold text-lg">Enterprise</span>
                 {/* Never use verify-amber for billing */}
-                <Badge variant="default">Active</Badge>
+                <Badge intent="default">Active</Badge>
             </div>
         </div>
 
@@ -54,7 +54,7 @@ export default function OrgSettingsPage() {
                     <tr className="h-10">
                         <td>cohort_search_fee</td>
                         <td>$50.00</td>
-                        <td><Badge variant="default">Settled</Badge></td>
+                        <td><Badge intent="default">Settled</Badge></td>
                     </tr>
                 </tbody>
             </table>

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Button, Input, Badge } from '@chorus/ui';
 import { Sparkles, AlertCircle, ShieldAlert } from 'lucide-react';
-import { CopilotDraftResponse, ComplianceCheckResponse } from '@chorus/types';
+import type { CopilotDraftResponse, ComplianceCheckResponse } from '@chorus/types';
 
 export function CopilotPanel() {
   const [prompt, setPrompt] = useState('');
@@ -66,7 +66,7 @@ export function CopilotPanel() {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
           />
-          <Button variant="primary" className="w-full" type="submit" disabled={isLoading}>
+          <Button intent="primary" className="w-full" type="submit" disabled={isLoading}>
             {isLoading ? 'Generating...' : 'Generate Criteria'}
           </Button>
         </form>
@@ -96,7 +96,7 @@ export function CopilotPanel() {
                     {JSON.stringify(draftData.suggestedCriteria, null, 2)}
                   </pre>
                 </div>
-                <Button variant="secondary" className="w-full text-sm">
+                <Button intent="secondary" className="w-full text-sm">
                   Apply Suggestions
                 </Button>
               </div>
@@ -112,7 +112,7 @@ export function CopilotPanel() {
                     <div className="flex items-start justify-between">
                       <span className="font-medium text-text-primary">{flag.regulation}</span>
                       {/* Using standard badge variants, explicitly avoiding 'verify-amber' */}
-                      <Badge variant={flag.severity === 'blocking' ? 'danger' : 'neutral'}>
+                      <Badge intent={flag.severity === 'blocking' ? 'error' : 'default'}>
                         {flag.severity === 'blocking' ? 'Blocking' : 'Advisory'}
                       </Badge>
                     </div>

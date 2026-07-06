@@ -1,5 +1,4 @@
-import { Badge } from '@chorus/ui/components/badge';
-import { Button } from '@chorus/ui/components/button';
+import { Badge, Button } from '@chorus/ui'
 
 export default async function NotificationsPage() {
     // In a real implementation this calls the local API (or DB directly in SSR).
@@ -34,7 +33,7 @@ export default async function NotificationsPage() {
                         {mockNotifications.map((notif) => (
                             <tr key={notif.id} className="hover:bg-muted/50 transition-colors">
                                 <td className="px-4 py-3">
-                                    {!notif.readAt && <Badge variant="default">New</Badge>}
+                                    {!notif.readAt && <Badge intent="default">New</Badge>}
                                 </td>
                                 <td className="px-4 py-3 font-medium">{notif.type}</td>
                                 <td className="px-4 py-3 text-muted-foreground">
@@ -43,7 +42,7 @@ export default async function NotificationsPage() {
                                 <td className="px-4 py-3 text-muted-foreground">{notif.createdAt}</td>
                                 <td className="px-4 py-3">
                                     {!notif.readAt && (
-                                        <Button variant="secondary" size="sm">Mark Read</Button>
+                                        <Button intent="secondary" size="sm">Mark Read</Button>
                                     )}
                                 </td>
                             </tr>

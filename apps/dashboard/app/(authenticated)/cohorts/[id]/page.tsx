@@ -14,10 +14,10 @@ export default function CohortBuilderPage() {
           </div>
           <div className="flex items-center gap-3">
             <Link href="/cohorts">
-              <Button variant="secondary">Cancel</Button>
+              <Button intent="secondary">Cancel</Button>
             </Link>
-            <Button variant="secondary">Save as Draft</Button>
-            <Button variant="primary">Submit</Button>
+            <Button intent="secondary">Save as Draft</Button>
+            <Button intent="primary">Submit</Button>
           </div>
         </div>
         
@@ -25,7 +25,7 @@ export default function CohortBuilderPage() {
           <section className="bg-bg-elevated border border-border-default rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-medium">Clinical Criteria</h2>
-              <Button variant="secondary" size="sm">
+              <Button intent="secondary" size="sm">
                 <Plus className="w-4 h-4 mr-2" /> Add Field
               </Button>
             </div>
@@ -59,7 +59,7 @@ export default function CohortBuilderPage() {
           <section className="bg-bg-elevated border border-border-default rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-medium">Demographic Criteria</h2>
-              <Button variant="secondary" size="sm">
+              <Button intent="secondary" size="sm">
                 <Plus className="w-4 h-4 mr-2" /> Add Field
               </Button>
             </div>

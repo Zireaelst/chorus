@@ -70,7 +70,7 @@ export default function HospitalAccessRequestsPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <h3 className="text-lg font-medium text-text-primary">{req.requestingOrg.name}</h3>
-                  <Badge variant={req.status === 'approved' ? 'success' : req.status === 'denied' ? 'danger' : 'neutral'}>
+                  <Badge intent={req.status === 'approved' ? 'success' : req.status === 'denied' ? 'error' : 'default'}>
                     {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
                   </Badge>
                 </div>
@@ -86,10 +86,10 @@ export default function HospitalAccessRequestsPage() {
               
               {req.status === 'pending' && (
                 <div className="flex flex-row md:flex-col gap-2 min-w-[140px]">
-                  <Button variant="primary" onClick={() => handleDecision(req.id, 'approved')}>
+                  <Button intent="primary" onClick={() => handleDecision(req.id, 'approved')}>
                     Approve
                   </Button>
-                  <Button variant="secondary" onClick={() => handleDecision(req.id, 'denied')}>
+                  <Button intent="secondary" onClick={() => handleDecision(req.id, 'denied')}>
                     Deny
                   </Button>
                 </div>

@@ -7,7 +7,7 @@ export default function CohortsPage() {
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-semibold">Cohorts</h1>
         <Link href="/cohorts/new">
-          <Button variant="primary">New Cohort Draft</Button>
+          <Button intent="primary">New Cohort Draft</Button>
         </Link>
       </div>
       
@@ -19,9 +19,9 @@ export default function CohortsPage() {
             <p className="text-sm text-text-secondary">Created 2 days ago</p>
           </div>
           <div className="flex items-center gap-4">
-            <Badge variant="neutral">Draft</Badge>
+            <Badge intent="default">Draft</Badge>
             <Link href="/cohorts/123">
-              <Button variant="secondary">Edit Draft</Button>
+              <Button intent="secondary">Edit Draft</Button>
             </Link>
           </div>
         </div>
@@ -32,8 +32,8 @@ export default function CohortsPage() {
             <p className="text-sm text-text-secondary">Submitted 1 week ago</p>
           </div>
           <div className="flex items-center gap-4">
-            <Badge variant="success">Active</Badge>
-            <Button variant="secondary" disabled>View Details</Button>
+            <Badge intent="success">Active</Badge>
+            <Button intent="secondary" disabled>View Details</Button>
           </div>
         </div>
       </div>

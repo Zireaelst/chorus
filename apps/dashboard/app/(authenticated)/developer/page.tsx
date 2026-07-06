@@ -12,7 +12,7 @@ export default function DeveloperPortalPage() {
         <section>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-medium">API Keys</h2>
-            <Button variant="primary">Generate New Key</Button>
+            <Button intent="primary">Generate New Key</Button>
           </div>
           
           <div className="bg-bg-elevated border border-border-default rounded-xl overflow-hidden">
@@ -30,7 +30,7 @@ export default function DeveloperPortalPage() {
                   <td className="px-6 py-4 font-medium text-text-primary">Chorus Node Prod</td>
                   <td className="px-6 py-4 text-sm text-text-secondary">2026-06-01</td>
                   <td className="px-6 py-4 text-right">
-                    <Button variant="secondary" className="text-text-danger border-text-danger hover:bg-text-danger/10">Revoke</Button>
+                    <Button intent="secondary" className="text-text-danger border-text-danger hover:bg-text-danger/10">Revoke</Button>
                   </td>
                 </tr>
               </tbody>
@@ -42,7 +42,7 @@ export default function DeveloperPortalPage() {
         <section>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-medium">Webhooks</h2>
-            <Button variant="primary">Add Webhook</Button>
+            <Button intent="primary">Add Webhook</Button>
           </div>
           
           <div className="bg-bg-elevated border border-border-default rounded-xl overflow-hidden">
@@ -62,7 +62,7 @@ export default function DeveloperPortalPage() {
                     <div className="text-sm text-text-secondary mt-1">Events: payout.settled</div>
                   </td>
                   <td className="px-6 py-4">
-                    <Badge variant="success">Active</Badge>
+                    <Badge intent="success">Active</Badge>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <IconButton aria-label="Delete Webhook">

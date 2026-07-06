@@ -5,7 +5,7 @@ export default function OrgMembersPage() {
     <div className="max-w-4xl mx-auto py-8">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-semibold">Members</h1>
-        <Button variant="primary">Invite Member</Button>
+        <Button intent="primary">Invite Member</Button>
       </div>
       
       <div className="bg-bg-elevated border border-border-default rounded-xl overflow-hidden">
@@ -25,10 +25,10 @@ export default function OrgMembersPage() {
                 <div className="text-sm text-text-secondary">alice@example.com</div>
               </td>
               <td className="px-6 py-4">
-                <Badge variant="neutral">Hospital Admin</Badge>
+                <Badge intent="default">Hospital Admin</Badge>
               </td>
               <td className="px-6 py-4">
-                <Badge variant="success">Active</Badge>
+                <Badge intent="success">Active</Badge>
               </td>
             </tr>
             <tr>
@@ -37,10 +37,10 @@ export default function OrgMembersPage() {
                 <div className="text-sm text-text-secondary">bob@example.com</div>
               </td>
               <td className="px-6 py-4">
-                <Badge variant="neutral">Clinician</Badge>
+                <Badge intent="default">Clinician</Badge>
               </td>
               <td className="px-6 py-4">
-                <Badge variant="neutral">Pending</Badge>
+                <Badge intent="default">Pending</Badge>
               </td>
             </tr>
           </tbody>

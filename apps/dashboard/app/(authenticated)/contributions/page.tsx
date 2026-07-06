@@ -37,7 +37,7 @@ export default function ContributionsPage() {
                   <td className="px-6 py-4 font-medium text-text-primary">Type 2 Diabetes (Early Onset)</td>
                   <td className="px-6 py-4 text-text-secondary">Round 12</td>
                   <td className="px-6 py-4">
-                    <Badge variant="success">Verified</Badge>
+                    <Badge intent="success">Verified</Badge>
                   </td>
                   <td className="px-6 py-4 text-sm text-text-secondary">2026-07-01 14:22 UTC</td>
                 </tr>
@@ -45,7 +45,7 @@ export default function ContributionsPage() {
                   <td className="px-6 py-4 font-medium text-text-primary">Hypertension Study Q3</td>
                   <td className="px-6 py-4 text-text-secondary">Round 4</td>
                   <td className="px-6 py-4">
-                    <Badge variant="neutral">Queued</Badge>
+                    <Badge intent="default">Queued</Badge>
                   </td>
                   <td className="px-6 py-4 text-sm text-text-secondary">—</td>
                 </tr>
