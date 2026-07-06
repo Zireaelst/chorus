@@ -54,7 +54,7 @@ export default function LoginPage() {
             />
           </div>
 
-          <Button type="button" variant="primary" className="mt-4">
+          <Button type="button" intent="primary" className="mt-4">
             Sign In
           </Button>
         </form>
