@@ -66,6 +66,13 @@ flowchart TD
 
 Patient data itself never enters this diagram — it stays inside hospital infrastructure and is represented on this side only as a zero-knowledge proof. The full technical reference, including the trust-boundary and event-sequence diagrams, lives in [`SYSTEM_ARCHITECTURE.md`](./SYSTEM_ARCHITECTURE.md).
 
+### Public State vs Private Witness
+
+In our Midnight contracts (`contribution-ledger` and `payout`), we strictly separate what is visible on the blockchain (public state) from the sensitive data proving the validity of hospital contributions (private witness).
+
+- **Private Witness**: The raw patient data, federated learning checkpoints, and hospital identifiers are kept strictly local to the hospital's node. When a hospital participates in a training round, the node generates a zero-knowledge proof locally. This proof acts as a "private witness"—cryptographically attesting that the data was valid and the model was updated correctly, without ever revealing the underlying data.
+- **Public State**: The Midnight blockchain only stores the public state: the non-identifiable outcome of the proof verification. This includes the `cohortId`, `roundNumber`, and the mathematical hash of the verified proof (`proofRefHash`). This ensures that the global ledger accurately records contributions and handles payouts, while zero patient data or proprietary model weights are exposed to the public network.
+
 ## Repository overview
 
 ```
