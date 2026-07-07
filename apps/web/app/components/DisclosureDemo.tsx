@@ -50,7 +50,7 @@ export function DisclosureDemo() {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-medium text-white tracking-tight mb-4">Programmable Privacy</h2>
           <p className="text-white/60 max-w-xl mx-auto leading-relaxed">
-            Switch views below to observe how the cryptographic engine deterministically redacts sensitive fields based on the viewer's role.
+            Switch views below to observe how the cryptographic engine deterministically redacts sensitive fields based on the viewer's role, enforced on-chain via Midnight smart contracts.
           </p>
         </div>
 
