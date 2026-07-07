@@ -1,82 +1,170 @@
-import { Badge } from '@chorus/ui';
-import { AlertTriangle } from 'lucide-react';
+'use client';
+
+import * as React from 'react';
+import { Activity, Download, FileText, Filter, CheckCircle2, Clock, ShieldAlert } from 'lucide-react';
+import { Button, Input, Badge, IconButton } from '@chorus/ui';
+import { mockContributions, mockCohorts, type Contribution } from '@/lib/mock-data';
 
 export default function ContributionsPage() {
+  const [search, setSearch] = React.useState('');
+  const [contributions, setContributions] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function fetchData() {
+      try {
+        const sessionRes = await fetch('http://127.0.0.1:4000/v1/auth/session', { credentials: 'include' });
+        if (!sessionRes.ok) throw new Error('Not authenticated');
+        const sessionData = await sessionRes.json();
+        const orgId = sessionData.user.memberships[0]?.orgId;
+        
+        if (!orgId) {
+          throw new Error('No orgId found');
+        }
+
+        const [contribRes, payoutRes] = await Promise.all([
+          fetch(`http://127.0.0.1:4000/v1/orgs/${orgId}/contributions`, { credentials: 'include' }),
+          fetch(`http://127.0.0.1:4000/v1/orgs/${orgId}/payouts`, { credentials: 'include' })
+        ]);
+        
+        let contribs = [];
+        let payouts = [];
+        
+        if (contribRes.ok) {
+          const cData = await contribRes.json();
+          contribs = cData.items || [];
+        }
+        
+        if (payoutRes.ok) {
+          const pData = await payoutRes.json();
+          payouts = pData.items || [];
+        }
+
+        // Join payouts to contributions
+        const joined = contribs.map((c: any) => {
+          const payout = payouts.find((p: any) => p.contributionId === c.id);
+          return {
+            ...c,
+            payout
+          };
+        });
+        
+        setContributions(joined);
+      } catch (err) {
+        console.error('Failed to fetch contributions', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchData();
+  }, []);
+
+  const filteredContributions = contributions.filter(cont => {
+    return (
+      cont.onChainTxRef?.toLowerCase().includes(search.toLowerCase()) ||
+      cont.status.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
   return (
-    <div className="max-w-5xl mx-auto py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-semibold mb-2">Contributions & Earnings</h1>
-        <p className="text-text-secondary">View your verified contributions and settled payouts.</p>
-      </div>
-
-      <div className="bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 p-4 rounded-xl mb-8 flex items-start gap-3">
-        <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-        <div>
-          <h3 className="font-medium mb-1">Mock Data Notice (v0.4)</h3>
-          <p className="text-sm">
-            Proof engine and ledger integrations are scheduled for a later sprint. The data displayed below is entirely mocked for UI layout purposes and does not represent real federated learning contributions or settled stablecoin payouts.
-          </p>
+    <div className="flex flex-col min-h-full">
+      <header className="px-8 py-8 border-b border-border-hairline bg-canvas">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Activity className="w-8 h-8 text-text-primary" />
+            <div>
+              <h2 className="text-3xl font-bold font-display tracking-tight text-text-primary">Cryptographic Ledger</h2>
+              <p className="mt-2 text-sm text-text-secondary">
+                Verifiable record of your hospital's Zero-Knowledge proofs and metadata disclosures on the Midnight blockchain.
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <Button intent="secondary" className="flex items-center gap-2">
+              <Download className="w-4 h-4" />
+              Export CSV
+            </Button>
+          </div>
         </div>
-      </div>
-
-      <div className="grid gap-8">
-        <section>
-          <h2 className="text-xl font-medium mb-4">Recent Contributions</h2>
-          <div className="bg-bg-elevated border border-border-default rounded-xl overflow-hidden">
-            <table className="w-full text-left">
-              <thead className="bg-bg-subtle border-b border-border-default text-text-secondary text-sm">
-                <tr>
-                  <th className="px-6 py-4 font-medium">Cohort</th>
-                  <th className="px-6 py-4 font-medium">Round</th>
-                  <th className="px-6 py-4 font-medium">Status</th>
-                  <th className="px-6 py-4 font-medium">Verified At</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border-default opacity-60">
-                <tr>
-                  <td className="px-6 py-4 font-medium text-text-primary">Type 2 Diabetes (Early Onset)</td>
-                  <td className="px-6 py-4 text-text-secondary">Round 12</td>
-                  <td className="px-6 py-4">
-                    <Badge intent="success">Verified</Badge>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-text-secondary">2026-07-01 14:22 UTC</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 font-medium text-text-primary">Hypertension Study Q3</td>
-                  <td className="px-6 py-4 text-text-secondary">Round 4</td>
-                  <td className="px-6 py-4">
-                    <Badge intent="default">Queued</Badge>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-text-secondary">—</td>
-                </tr>
-              </tbody>
-            </table>
+      </header>
+      
+      <div className="flex-1 p-8 bg-canvas space-y-6">
+        <div className="flex items-center gap-4">
+          <div className="w-80">
+            <Input 
+              placeholder="Search by tx hash or status..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-        </section>
+          <Button intent="secondary" className="flex items-center gap-2">
+            <Filter className="w-4 h-4" />
+            Filter
+          </Button>
+        </div>
 
-        <section>
-          <h2 className="text-xl font-medium mb-4">Earnings History</h2>
-          <div className="bg-bg-elevated border border-border-default rounded-xl overflow-hidden">
-            <table className="w-full text-left">
-              <thead className="bg-bg-subtle border-b border-border-default text-text-secondary text-sm">
+        <div className="border border-border-hairline rounded-lg overflow-hidden bg-surface">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead className="bg-surface border-b border-border-hairline">
+              <tr>
+                <th className="px-6 py-4 font-medium text-text-secondary uppercase tracking-wider text-xs">Event / Proof Type</th>
+                <th className="px-6 py-4 font-medium text-text-secondary uppercase tracking-wider text-xs">Midnight Tx Hash</th>
+                <th className="px-6 py-4 font-medium text-text-secondary uppercase tracking-wider text-xs">Consortium ID</th>
+                <th className="px-6 py-4 font-medium text-text-secondary uppercase tracking-wider text-xs">Payout</th>
+                <th className="px-6 py-4 font-medium text-text-secondary uppercase tracking-wider text-xs">Timestamp</th>
+                <th className="px-6 py-4 font-medium text-text-secondary uppercase tracking-wider text-xs text-right">Verification Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border-hairline">
+              {loading ? (
                 <tr>
-                  <th className="px-6 py-4 font-medium">Date Settled</th>
-                  <th className="px-6 py-4 font-medium">Cohort</th>
-                  <th className="px-6 py-4 font-medium">Tx Ref</th>
-                  <th className="px-6 py-4 font-medium text-right">Amount (USDC)</th>
+                  <td colSpan={6} className="px-6 py-12 text-center text-text-secondary">
+                    Loading contributions...
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-border-default opacity-60">
+              ) : filteredContributions.length === 0 ? (
                 <tr>
-                  <td className="px-6 py-4 text-sm text-text-secondary">2026-07-02</td>
-                  <td className="px-6 py-4 font-medium text-text-primary">Type 2 Diabetes (Early Onset)</td>
-                  <td className="px-6 py-4 text-sm text-primary-base font-mono">0x123...abc</td>
-                  <td className="px-6 py-4 text-right font-medium">1,250.00</td>
+                  <td colSpan={6} className="px-6 py-12 text-center text-text-secondary">
+                    No transactions found matching your criteria.
+                  </td>
                 </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+              ) : filteredContributions.map((cont) => {
+                return (
+                  <tr key={cont.id} className="hover:bg-border-hairline/30 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2 text-text-primary font-medium">
+                        {cont.status === 'verified' ? <CheckCircle2 className="w-4 h-4 text-status-success" /> : <Clock className="w-4 h-4 text-status-warning" />}
+                        Cohort Qualification
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Badge intent="default" className="font-mono bg-surface">
+                        {cont.onChainTxRef || 'Pending...'}
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-4 text-text-secondary font-mono">
+                      {cont.cohortId.substring(0, 8)}...
+                    </td>
+                    <td className="px-6 py-4 font-mono text-text-primary">
+                      {cont.payout ? `${cont.payout.amount} ${cont.payout.currency}` : 'None'}
+                    </td>
+                    <td className="px-6 py-4 text-text-secondary font-mono">
+                      {cont.verifiedAt ? new Date(cont.verifiedAt).toLocaleString() : 'N/A'}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <Badge 
+                        intent={cont.status === 'verified' ? 'success' : cont.status === 'queued' || cont.status === 'processing' ? 'warning' : 'error'} 
+                      >
+                        {cont.status}
+                      </Badge>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

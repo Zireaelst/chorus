@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     // or proxy it. Since `services/api` directly sets the cookie, it's easier 
     // if the frontend proxies the set-cookie header.
     const data = await res.json();
-    const response = NextResponse.redirect(new URL('/dashboard', request.url));
+    const response = NextResponse.redirect(new URL('/', request.url));
     
     // Pass along set-cookie headers from API
     const setCookie = res.headers.get('set-cookie');
