@@ -1,7 +1,13 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
-import { MembershipRole, inviteSchema } from '@chorus/types';
+import { MembershipRole } from '@chorus/types';
+import { z } from 'zod';
+
+const inviteSchema = z.object({
+  email: z.string().email(),
+  role: z.string()
+});
 
 const ORG_TYPE_ROLES: Record<string, string[]> = {
   hospital: ['hospital_admin', 'clinician', 'compliance_officer'],
@@ -108,6 +114,38 @@ export class OrgsService {
       email,
       role,
       status: 'pending',
+    };
+  }
+
+  async getContributions(orgId: string, cursor?: string, limit: number = 25) {
+    const take = Math.min(limit, 100);
+    
+    const contributions = await this.prisma.contribution.findMany({
+      where: { orgId },
+      take: take + 1,
+      ...(cursor && {
+        cursor: { id: cursor },
+        skip: 1,
+      }),
+      orderBy: { createdAt: 'desc' },
+    });
+
+    let nextCursor: string | null = null;
+    if (contributions.length > take) {
+      const nextItem = contributions.pop();
+      nextCursor = nextItem?.id ?? null;
+    }
+
+    return {
+      items: contributions.map(c => ({
+        id: c.id,
+        cohortId: c.cohortId,
+        roundNumber: c.roundNumber,
+        status: c.status,
+        onChainTxRef: c.onChainTxRef,
+        verifiedAt: c.verifiedAt,
+      })),
+      nextCursor,
     };
   }
 }

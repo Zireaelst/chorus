@@ -38,7 +38,7 @@ export class AuthController {
   @Get()
   async getSession(@Req() req: FastifyRequest) {
     // fastify-cookie should be configured for this to work
-    const token = req.cookies['chorus_session'];
+    const token = (req as any).cookies['chorus_session'];
     if (!token) {
       throw new UnauthorizedException('No session cookie');
     }
@@ -48,11 +48,11 @@ export class AuthController {
 
   @Post('revoke')
   async revoke(@Req() req: FastifyRequest, @Res({ passthrough: true }) res: FastifyReply) {
-    const token = req.cookies['chorus_session'];
+    const token = (req as any).cookies['chorus_session'];
     if (token) {
       await this.authService.revoke(token);
     }
-    res.clearCookie('chorus_session', {
+    (res as any).clearCookie('chorus_session', {
       path: '/',
       domain: process.env.COOKIE_DOMAIN || undefined,
     });

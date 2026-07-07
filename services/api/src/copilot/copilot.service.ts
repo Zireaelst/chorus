@@ -27,8 +27,8 @@ export class CopilotService {
       
       // Enforce the rule that AI service response is never auto-persisted and requires review
       return {
-        suggestedCriteria: data.suggestedCriteria,
-        ambiguousFields: data.ambiguousFields || [],
+        suggestedCriteria: (data as any).suggestedCriteria,
+        ambiguousFields: (data as any).ambiguousFields || [],
         requiresReview: true
       } as CopilotDraftResponse;
       

@@ -25,8 +25,8 @@ export class RateLimitGuard implements CanActivate {
     let identifier = request.ip || 'unknown';
     if (request.headers['authorization']) {
         identifier = request.headers['authorization'];
-    } else if (request.cookies && request.cookies['session']) {
-        identifier = request.cookies['session'];
+    } else if ((request as any).cookies && (request as any).cookies['session']) {
+        identifier = (request as any).cookies['session'];
     }
 
     const key = `rate-limit:${identifier}`;

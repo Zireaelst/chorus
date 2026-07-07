@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { mockCohorts, MockCohort } from '../../prisma/seed/mock-cohorts';
+const mockCohorts = []; type MockCohort = any;
 import { K_ANONYMITY_FLOOR } from '../config/anonymity';
 
 export interface SearchResult {

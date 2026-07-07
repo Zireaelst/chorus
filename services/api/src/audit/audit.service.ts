@@ -11,7 +11,7 @@ export class AuditService {
     eventType: string;
     metadata: any;
   }) {
-    return this.prisma.auditLog.create({
+    await this.prisma.auditLog.create({
       data: {
         actorUserId: params.actorUserId,
         orgId: params.orgId,

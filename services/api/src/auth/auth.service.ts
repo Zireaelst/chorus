@@ -46,7 +46,7 @@ export class AuthService {
       actorUserId: dbUser.id,
       orgId: memberships[0].orgId, // Using primary org for the login event
       eventType: 'session.issued',
-      metadata: {
+      metadata: { status: params?.status as any,
         ip,
         workosSessionId: session.id,
       },
@@ -61,13 +61,13 @@ export class AuthService {
   async verify(sessionToken: string) {
     try {
       const result = await verifySession(sessionToken);
-      if (!result.user) {
+      if (!(result as any).user) {
         throw new UnauthorizedException('Invalid session');
       }
 
       // Fetch user and memberships
       const dbUser = await this.prisma.user.findUnique({
-        where: { workosUserId: result.user.id },
+        where: { workosUserId: (result as any).user.id },
         include: { memberships: true },
       });
 
@@ -100,7 +100,7 @@ export class AuthService {
           actorUserId: user.id,
           orgId: user.memberships[0].orgId,
           eventType: 'session.revoked',
-          metadata: {},
+          metadata: { status: params?.status as any,},
         });
       }
     } catch (e) {

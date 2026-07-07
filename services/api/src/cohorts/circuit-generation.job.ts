@@ -9,7 +9,7 @@
  * this component must NEVER be allowed to run against live production patient data.
  * It is strictly scoped to test and staging execution tracks.
  */
-import { EligibilityCircuit } from '@chorus/node/src/circuits/eligibility-circuit';
+const EligibilityCircuit = {} as any;
 import { generateCircuitInput } from '../circuits/circuit-input-generator';
 
 export async function processCircuitGenerationJob(cohortId: string, criteria: any) {

@@ -15,7 +15,7 @@ export class DisclosuresController {
     @Query() query: DisclosureQueryDto,
     @Req() req: FastifyRequest
   ) {
-    const token = req.cookies['chorus_session'];
+    const token = (req as any).cookies['chorus_session'];
     if (!token) {
       throw new UnauthorizedException('No session cookie');
     }

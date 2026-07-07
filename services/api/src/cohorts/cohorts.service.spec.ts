@@ -3,6 +3,8 @@ import { CohortsService } from './cohorts.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { BadRequestException } from '@nestjs/common';
 
+import { AuditService } from '../audit/audit.service';
+
 describe('CohortsService', () => {
   let service: CohortsService;
   let prisma: any;
@@ -15,6 +17,7 @@ describe('CohortsService', () => {
       providers: [
         CohortsService,
         { provide: PrismaService, useValue: prisma },
+        { provide: AuditService, useValue: { logEvent: jest.fn() } }
       ],
     }).compile();
 

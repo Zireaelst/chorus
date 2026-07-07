@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/node';
 
 @Catch()
 export class SentryExceptionFilter extends BaseExceptionFilter {
-  catch(exception: unknown, host: ArgumentsHost) {
+  override catch(exception: unknown, host: ArgumentsHost) {
     // Only report 500s or unexpected errors to Sentry
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
@@ -28,8 +28,8 @@ export class SentryExceptionFilter extends BaseExceptionFilter {
       scope.setExtra('method', req.method);
       if (req.user) {
         scope.setUser({ id: req.user.id });
-        if (req.user.orgId) {
-          scope.setTag('orgId', req.user.orgId);
+        if (req.user.memberships[0].orgId) {
+          scope.setTag('orgId', req.user.memberships[0].orgId);
         }
       }
       Sentry.captureException(exception);

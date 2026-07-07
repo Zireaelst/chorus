@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Post, Body, Param, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Patch, Post, Body, Param, UseGuards, Req, Query } from '@nestjs/common';
 import { OrgsService } from './orgs.service';
 import { RbacGuard } from '../auth/rbac.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -39,4 +39,18 @@ export class OrgsController {
     const actorUserId = req.user?.id || 'system';
     return this.orgsService.inviteMember(orgId, actorUserId, body.email, body.role);
   }
+
+  @Get(':orgId/contributions')
+  @UseGuards(RbacGuard)
+  @Roles('hospital_admin', 'clinician', 'compliance_officer', 'sponsor', 'regulator', 'chorus_admin')
+  async getContributions(
+    @Param('orgId') orgId: string,
+    @Query('cursor') cursor: string,
+    @Query('limit') limitStr: string,
+    @Req() req: FastifyRequest & { user?: any }
+  ) {
+    const limit = limitStr ? parseInt(limitStr, 10) : 25;
+    return this.orgsService.getContributions(orgId, cursor, limit);
+  }
 }
+

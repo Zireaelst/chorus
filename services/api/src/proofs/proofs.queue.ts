@@ -3,7 +3,7 @@ import { redisClient } from '../common/redis.client';
 import { SubmitProofRequest } from '@chorus/types';
 
 export const proofsQueue = new Queue('proof-verification', {
-  connection: redisClient,
+  connection: redisClient as any,
 });
 
 export async function enqueueProofForVerification(
