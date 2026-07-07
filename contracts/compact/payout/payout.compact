@@ -1,6 +1,6 @@
 pragma language_version >= 0.14.0;
+import CompactStandardLibrary;
 
-import Config from "std";
 
 export struct PayoutRecord {
     amount: Uint<64>,
@@ -8,11 +8,11 @@ export struct PayoutRecord {
     settlement_ref: Bytes<32>
 }
 
-export ledger payouts: Cell<Map<Bytes<32>, PayoutRecord>>;
-export ledger contribution_ledger_address: Cell<Bytes<32>>;
+export ledger payouts: Map<Bytes<32>, PayoutRecord>;
+export ledger contribution_ledger_address: Bytes<32>;
 
 export circuit init(ledger_address: Bytes<32>): [] {
-    contribution_ledger_address.write(ledger_address);
+    contribution_ledger_address = disclose(ledger_address);
 }
 
 export circuit trigger_payout(
@@ -27,9 +27,9 @@ export circuit trigger_payout(
     // Mock check representing the authorization:
     // assert(global.caller == contribution_ledger_address.read(), "Unauthorized caller: only contribution ledger can trigger payouts");
     
-    payouts.insert(contribution_hash, PayoutRecord {
-        amount: amount,
-        recipient_org: recipient_org,
-        settlement_ref: settlement_ref
+    payouts.insert(disclose(contribution_hash), PayoutRecord {
+        amount: disclose(amount),
+        recipient_org: disclose(recipient_org),
+        settlement_ref: disclose(settlement_ref)
     });
 }

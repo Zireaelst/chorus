@@ -1,7 +1,6 @@
 pragma language_version >= 0.14.0;
 
-import Config from "std";
-
+import CompactStandardLibrary;
 export struct Contribution {
     cohort_id: Bytes<32>,
     org_id: Bytes<32>,
@@ -11,7 +10,7 @@ export struct Contribution {
 }
 
 // A composite key of cohort_id + org_id + round_number
-export ledger contributions: Cell<Map<Bytes<32>, Contribution>>;
+export ledger contributions: Map<Bytes<32>, Contribution>;
 
 // We will use a mock cross-contract call since the compiler doesn't have the real interface yet.
 // In reality this calls payout.compact.
@@ -28,16 +27,16 @@ export circuit record_contribution(
     // For this mock, we just use contribution_hash as the unique key, but conceptually it should be the triple.
     
     // We simulate the unique constraint:
-    const key = contribution_hash;
+    const key = disclose(contribution_hash);
     
     assert(!contributions.member(key), "Duplicate contribution rejected (replay protection)");
 
     contributions.insert(key, Contribution {
-        cohort_id: cohort_id,
-        org_id: org_id,
-        round_number: round_number,
-        contribution_hash: contribution_hash,
-        verification_timestamp: verification_timestamp
+        cohort_id: disclose(cohort_id),
+        org_id: disclose(org_id),
+        round_number: disclose(round_number),
+        contribution_hash: disclose(contribution_hash),
+        verification_timestamp: disclose(verification_timestamp)
     });
     
     // Note: Here we would perform a cross-contract call to Payout contract
