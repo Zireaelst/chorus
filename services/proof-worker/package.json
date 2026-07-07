@@ -12,5 +12,13 @@
     "@chorus/config": "workspace:*",
     "@types/node": "^22.7.5",
     "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.4.4",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "bullmq": "^5.79.2",
+    "ioredis": "^5.11.1",
+    "pg": "^8.22.0"
   }
 }
