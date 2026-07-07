@@ -53,3 +53,11 @@ prisma/generated/
 
 # Storybook
 storybook-static/
+
+# Midnight & Contract build artifacts
+contracts/.mn-contract-*.mjs
+contracts/compact/*/managed/
+contracts/midnight-level-db/
+
+# Scratch & Logs
+services/api/build_errors.txt
