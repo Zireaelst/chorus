@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+// @ts-ignore
 import generatedTheme from '@chorus/design-tokens/build/tailwind-theme.js'
 
 const preset: Config = {
