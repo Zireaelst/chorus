@@ -9,10 +9,13 @@
             "framework": "nextjs"
         },
         "ai": {
-            "root": "services/ai"
+            "root": "services/ai",
+            "framework": "fastapi",
+            "entrypoint": "src/main.py"
         },
         "api": {
-            "root": "services/api"
+            "root": "services/api",
+            "framework": "nestjs"
         }
     },
     "rewrites": [
