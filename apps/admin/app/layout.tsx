@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 
-import '../dashboard/app/globals.css'
+import './globals.css'
 
 const fontSans = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
 const fontMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' })
