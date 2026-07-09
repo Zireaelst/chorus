@@ -1,4 +1,4 @@
-import { Badge } from '@chorus/ui/components/badge';
+import { Badge } from '@chorus/ui';
 import Link from 'next/link';
 
 export default async function DisputesPage({ searchParams }: { searchParams: { status?: string } }) {

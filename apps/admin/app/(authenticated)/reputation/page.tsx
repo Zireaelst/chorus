@@ -1,4 +1,4 @@
-import { Badge } from '@chorus/ui/components/badge';
+import { Badge } from '@chorus/ui';
 // Using standard primitive layout, avoiding verify-amber explicitly per spec.
 
 export default async function ReputationPage() {

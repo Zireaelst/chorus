@@ -1,6 +1,6 @@
-import { Badge } from '@chorus/ui/components/badge';
+import { Badge } from '@chorus/ui';
 import Link from 'next/link';
-import { Button } from '@chorus/ui/components/button';
+import { Button } from '@chorus/ui';
 
 export default async function MarketplaceAdminPage() {
     // In a real implementation, this would fetch from /v1/marketplace/checkpoints.

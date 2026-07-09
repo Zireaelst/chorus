@@ -1,5 +1,4 @@
-import { Badge } from '@chorus/ui/components/badge';
-import { Button } from '@chorus/ui/components/button';
+import { Badge, Button } from '@chorus/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 

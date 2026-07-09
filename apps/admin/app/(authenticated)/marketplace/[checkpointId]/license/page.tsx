@@ -1,6 +1,4 @@
-import { Badge } from '@chorus/ui/components/badge';
-import { Button } from '@chorus/ui/components/button';
-import { Input } from '@chorus/ui/components/input';
+import { Badge, Button, Input } from '@chorus/ui';
 import Link from 'next/link';
 
 export default async function ManageLicensesPage({ params }: { params: { checkpointId: string } }) {
