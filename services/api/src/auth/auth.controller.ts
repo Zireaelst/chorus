@@ -22,15 +22,15 @@ export class AuthController {
       req.ip
     );
 
-    // Set HttpOnly, Secure, SameSite=Lax cookie
-    res.setCookie('chorus_session', sessionCookie, {
+    const cookieOptions: any = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       expires: expiresAt,
       path: '/',
-      domain: process.env.COOKIE_DOMAIN || undefined,
-    });
+    };
+    if (process.env.COOKIE_DOMAIN) cookieOptions.domain = process.env.COOKIE_DOMAIN;
+    (res as any).setCookie('chorus_session', sessionCookie, cookieOptions);
 
     return { success: true };
   }
@@ -52,10 +52,9 @@ export class AuthController {
     if (token) {
       await this.authService.revoke(token);
     }
-    (res as any).clearCookie('chorus_session', {
-      path: '/',
-      domain: process.env.COOKIE_DOMAIN || undefined,
-    });
+    const clearOptions: any = { path: '/' };
+    if (process.env.COOKIE_DOMAIN) clearOptions.domain = process.env.COOKIE_DOMAIN;
+    (res as any).clearCookie('chorus_session', clearOptions);
     return { success: true };
   }
 }

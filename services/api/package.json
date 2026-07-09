@@ -5,7 +5,7 @@
   "main": "src/main.ts",
   "description": "services/api — NestJS synchronous API gateway. The single entry point for all apps and SDK integrations. Source: SYSTEM_ARCHITECTURE.md.",
   "scripts": {
-    "build": "nest build",
+    "build": "npx turbo run build --filter=@chorus/api^... && prisma generate && nest build",
     "dev": "nest start --watch",
     "start": "node dist/main",
     "lint": "eslint src --max-warnings 0",

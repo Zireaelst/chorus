@@ -32,7 +32,7 @@ export class DisputesService {
     }
 
     const dispute = await this.prisma.dispute.create({
-      data: { status: params?.status as any,
+      data: {
         subjectType: data.subjectType,
         subjectId: data.subjectId,
         description: data.description,
@@ -42,9 +42,9 @@ export class DisputesService {
 
     await this.audit.logEvent({
       actorUserId: user.id,
-      orgId: user.memberships[0].orgId,
+      orgId: user.memberships[0]!.orgId,
       eventType: 'dispute.created',
-      metadata: { status: params?.status as any, disputeId: dispute.id, subjectType: data.subjectType, subjectId: data.subjectId }
+      metadata: { disputeId: dispute.id, subjectType: data.subjectType, subjectId: data.subjectId }
     });
 
     return dispute;
@@ -70,25 +70,25 @@ export class DisputesService {
 
     const updated = await this.prisma.dispute.update({
       where: { id },
-      data: { status: params?.status as any,
-        status: data.status,
-        resolutionNote: data.resolutionNote !== undefined ? data.resolutionNote : undefined
+      data: {
+        ...(data.status ? { status: data.status } : {}),
+        ...(data.resolutionNote !== undefined ? { resolutionNote: data.resolutionNote } : {})
       }
     });
 
     if (data.status && oldStatus !== data.status) {
       await this.audit.logEvent({
         actorUserId: user.id,
-        orgId: user.memberships[0].orgId,
+        orgId: user.memberships[0]!.orgId,
         eventType: 'dispute.status_updated',
-        metadata: { status: params?.status as any, disputeId: id, oldStatus, newStatus: data.status, resolutionNote: data.resolutionNote }
+        metadata: { disputeId: id, oldStatus, newStatus: data.status, resolutionNote: data.resolutionNote }
       });
     } else if (data.resolutionNote) {
       await this.audit.logEvent({
         actorUserId: user.id,
-        orgId: user.memberships[0].orgId,
+        orgId: user.memberships[0]!.orgId,
         eventType: 'dispute.note_updated',
-        metadata: { status: params?.status as any, disputeId: id, resolutionNote: data.resolutionNote }
+        metadata: { disputeId: id, resolutionNote: data.resolutionNote }
       });
     }
 

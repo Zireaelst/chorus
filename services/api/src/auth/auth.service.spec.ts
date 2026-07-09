@@ -70,7 +70,7 @@ describe('AuthService', () => {
 
       const result = await service.verify('valid-token');
       expect(result.id).toBe('db_user_id');
-      expect(result.memberships[0].role).toBe('hospital_admin');
+      expect(result.memberships[0]!.role).toBe('hospital_admin');
     });
   });
 });

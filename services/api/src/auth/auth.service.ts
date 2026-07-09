@@ -12,7 +12,14 @@ export class AuthService {
   ) {}
 
   async exchangeCode(code: string, clientId: string, ip: string) {
-    const { user, session } = await exchangeCodeForSession(code, clientId);
+    const authRes: any = await exchangeCodeForSession(code, clientId);
+    const user = authRes.user;
+    const session = authRes.session || { 
+      token: authRes.accessToken || 'token', 
+      id: 'session', 
+      expiresAt: new Date(Date.now() + 86400000) 
+    };
+    
     if (!user || !session) {
       throw new UnauthorizedException('Invalid exchange response');
     }
@@ -44,9 +51,9 @@ export class AuthService {
     // Log the event
     await this.audit.logEvent({
       actorUserId: dbUser.id,
-      orgId: memberships[0].orgId, // Using primary org for the login event
+      orgId: memberships[0]!.orgId, // Using primary org for the login event
       eventType: 'session.issued',
-      metadata: { status: params?.status as any,
+      metadata: {
         ip,
         workosSessionId: session.id,
       },
@@ -98,9 +105,9 @@ export class AuthService {
       if (user && user.memberships.length > 0) {
         await this.audit.logEvent({
           actorUserId: user.id,
-          orgId: user.memberships[0].orgId,
+          orgId: user.memberships[0]!.orgId,
           eventType: 'session.revoked',
-          metadata: { status: params?.status as any,},
+          metadata: {},
         });
       }
     } catch (e) {

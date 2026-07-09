@@ -33,9 +33,14 @@ export class AccessRequestsService {
       }
     });
 
-    await this.audit.log(orgId, userId, 'access_request.created', {
-      requestId: request.id,
-      cohortId
+    await this.audit.logEvent({
+      orgId,
+      actorUserId: userId,
+      eventType: 'access_request.created',
+      metadata: {
+        requestId: request.id,
+        cohortId
+      }
     });
 
     return request;
@@ -68,10 +73,15 @@ export class AccessRequestsService {
       }
     });
 
-    await this.audit.log(orgId, userId, `access_request.${payload.decision}`, {
-      requestId,
-      cohortId: request.cohortId,
-      note: payload.note
+    await this.audit.logEvent({
+      orgId,
+      actorUserId: userId,
+      eventType: `access_request.${payload.decision}`,
+      metadata: {
+        requestId,
+        cohortId: request.cohortId,
+        note: payload.note
+      }
     });
 
     // Enqueue an access request decision notification asynchronously

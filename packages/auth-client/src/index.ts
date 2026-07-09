@@ -49,6 +49,5 @@ export const verifySession = async (sessionToken: string) => {
 
   return getClient().userManagement.authenticateWithSessionCookie({
     sessionData: sessionToken,
-    clientId,
   });
 };
