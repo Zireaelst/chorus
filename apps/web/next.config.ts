@@ -37,6 +37,8 @@ const config: NextConfig = {
   // Strict mode to surface React 19 deprecation warnings early
   reactStrictMode: true,
 
+  transpilePackages: ['@chorus/ui', '@chorus/config', '@chorus/design-tokens', '@chorus/types'],
+
   // Disable x-powered-by header — minor security hygiene
   poweredByHeader: false,
 
