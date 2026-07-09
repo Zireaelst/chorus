@@ -61,3 +61,4 @@ contracts/midnight-level-db/
 
 # Scratch & Logs
 services/api/build_errors.txt
+/midnight-level-db/
