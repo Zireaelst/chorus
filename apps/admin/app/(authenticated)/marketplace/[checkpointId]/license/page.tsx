@@ -1,7 +1,8 @@
 import { Badge, Button, Input } from '@chorus/ui';
 import Link from 'next/link';
 
-export default async function ManageLicensesPage({ params }: { params: { checkpointId: string } }) {
+export default async function ManageLicensesPage({ params }: { params: Promise<{ checkpointId: string }> }) {
+    const { checkpointId } = await params;
     // In a real implementation, fetch existing licenses from /v1/marketplace/licenses/checkpoint/:id
     const mockLicenses = [
         { id: 'lic_abc', licenseeName: 'PharmaCorp', createdAt: '2026-07-03' }
@@ -16,7 +17,7 @@ export default async function ManageLicensesPage({ params }: { params: { checkpo
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">Manage Licenses</h1>
                     <p className="text-muted-foreground text-sm">
-                        Checkpoint: <span className="font-mono">{params.checkpointId}</span>
+                        Checkpoint: <span className="font-mono">{checkpointId}</span>
                     </p>
                 </div>
             </div>

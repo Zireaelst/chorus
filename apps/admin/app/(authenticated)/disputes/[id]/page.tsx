@@ -2,10 +2,11 @@ import { Badge, Button } from '@chorus/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-export default async function DisputeDetailPage({ params }: { params: { id: string } }) {
+export default async function DisputeDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     // In a real implementation, we fetch the specific dispute and its subject details.
     const mockDispute = {
-        id: params.id,
+        id: id,
         subjectType: 'access_request',
         subjectId: 'ar_1234567890abcdef',
         status: 'open',

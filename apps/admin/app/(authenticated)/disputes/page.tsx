@@ -1,7 +1,7 @@
 import { Badge } from '@chorus/ui';
 import Link from 'next/link';
 
-export default async function DisputesPage({ searchParams }: { searchParams: { status?: string } }) {
+export default async function DisputesPage({ searchParams }: { searchParams: Promise<{ status?: string }> }) {
     // In a real implementation, we fetch disputes from services/api over REST or Prisma directly
     // Simulating database output for Sprint 21 UI construction:
     const mockDisputes = [
@@ -10,7 +10,7 @@ export default async function DisputesPage({ searchParams }: { searchParams: { s
         { id: '3', subjectType: 'payout', subjectId: 'py_1', status: 'resolved', description: 'Payment mismatched ledger', createdAt: '2026-07-03T09:00:00Z' },
     ];
 
-    const currentStatus = searchParams.status;
+    const currentStatus = (await searchParams).status;
     const filtered = currentStatus ? mockDisputes.filter(d => d.status === currentStatus) : mockDisputes;
 
     return (
