@@ -15,7 +15,8 @@
         },
         "api": {
             "root": "services/api",
-            "framework": "nestjs"
+            "framework": "nestjs",
+            "entrypoint": "src/main.ts"
         }
     },
     "rewrites": [
