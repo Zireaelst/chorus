@@ -28,5 +28,5 @@ const config: NextConfig = {
       },
     ];
   },
-  reactStrictMode: true, transpilePackages: ['@chorus/ui', '@chorus/config', '@chorus/design-tokens', '@chorus/types'], poweredByHeader: false, images: { formats: ['image/avif', 'image/webp'] } }
+  basePath: '/admin', reactStrictMode: true, transpilePackages: ['@chorus/ui', '@chorus/config', '@chorus/design-tokens', '@chorus/types'], poweredByHeader: false, images: { formats: ['image/avif', 'image/webp'] } }
 export default config

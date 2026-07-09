@@ -4,6 +4,10 @@
             "root": "apps/web",
             "framework": "nextjs"
         },
+        "admin": {
+            "root": "apps/admin",
+            "framework": "nextjs"
+        },
         "ai": {
             "root": "services/ai"
         },
@@ -15,21 +19,24 @@
         {
             "source": "/api/api(/.*)?",
             "destination": {
-                "type": "service",
                 "service": "api"
             }
         },
         {
             "source": "/api/ai(/.*)?",
             "destination": {
-                "type": "service",
                 "service": "ai"
+            }
+        },
+        {
+            "source": "/admin(/.*)?",
+            "destination": {
+                "service": "admin"
             }
         },
         {
             "source": "/(.*)",
             "destination": {
-                "type": "service",
                 "service": "web"
             }
         }
