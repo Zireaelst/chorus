@@ -2,7 +2,7 @@ import { Controller, Post, Patch, Get, Body, Param, UseGuards, Request } from '@
 import { AccessRequestsService } from './access-requests.service';
 import { RbacGuard } from '../auth/rbac.guard';
 import { Roles } from '../auth/roles.decorator';
-import { CreateAccessRequest, DecideAccessRequest } from '@chorus/types';
+import type { CreateAccessRequest, DecideAccessRequest } from '@chorus/types';
 
 @Controller('v1')
 export class AccessRequestsController {

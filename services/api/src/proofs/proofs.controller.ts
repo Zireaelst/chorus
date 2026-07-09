@@ -5,7 +5,7 @@ import { Roles } from '../auth/roles.decorator';
 import { FastifyRequest } from 'fastify';
 import { RequiresIdempotencyKey } from '../common/idempotency/requires-idempotency-key.decorator';
 import { IdempotencyInterceptor } from '../common/idempotency/idempotency.interceptor';
-import { SubmitProofRequest } from '@chorus/types';
+import type { SubmitProofRequest } from '@chorus/types';
 
 @Controller('v1/proofs')
 export class ProofsController {

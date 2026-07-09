@@ -3,7 +3,7 @@ import { CopilotService } from './copilot.service';
 import { CopilotQuotaGuard } from '../common/rate-limit/copilot-quota.guard';
 import { RbacGuard } from '../auth/rbac.guard';
 import { Roles } from '../auth/roles.decorator';
-import { CopilotDraftRequest, ComplianceCheckRequest } from '@chorus/types';
+import type { CopilotDraftRequest, ComplianceCheckRequest } from '@chorus/types';
 
 @Controller('v1/copilot')
 export class CopilotController {
