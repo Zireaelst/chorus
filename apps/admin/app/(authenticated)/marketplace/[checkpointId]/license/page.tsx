@@ -12,7 +12,7 @@ export default async function ManageLicensesPage({ params }: { params: Promise<{
         <div className="p-8 max-w-4xl mx-auto space-y-8">
             <div className="flex items-center gap-4">
                 <Link href="/marketplace">
-                    <Button variant="secondary" size="sm">← Back</Button>
+                    <Button intent="secondary" size="sm">← Back</Button>
                 </Link>
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">Manage Licenses</h1>
@@ -33,7 +33,7 @@ export default async function ManageLicensesPage({ params }: { params: Promise<{
                         <label className="text-sm font-medium text-text-secondary" htmlFor="terms">Terms Link / Text</label>
                         <Input id="terms" placeholder="https://..." />
                     </div>
-                    <Button variant="primary" type="submit">Issue License</Button>
+                    <Button intent="primary" type="submit">Issue License</Button>
                 </form>
             </section>
 
@@ -62,7 +62,7 @@ export default async function ManageLicensesPage({ params }: { params: Promise<{
                                     <td className="px-4 py-3 font-medium">{lic.licenseeName}</td>
                                     <td className="px-4 py-3 text-muted-foreground">{lic.createdAt}</td>
                                     <td className="px-4 py-3">
-                                        <Badge variant="default">Active</Badge>
+                                        <Badge intent="default">Active</Badge>
                                     </td>
                                 </tr>
                             ))}

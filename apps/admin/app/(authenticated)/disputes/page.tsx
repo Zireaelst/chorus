@@ -50,7 +50,7 @@ export default async function DisputesPage({ searchParams }: { searchParams: Pro
                                 <td className="px-4 py-3 capitalize">{row.subjectType.replace('_', ' ')}</td>
                                 <td className="px-4 py-3 truncate max-w-xs">{row.description}</td>
                                 <td className="px-4 py-3">
-                                    <Badge variant="outline" className="text-xs px-2 py-0.5 rounded-full capitalize">
+                                    <Badge intent="outline" className="text-xs px-2 py-0.5 rounded-full capitalize">
                                         {row.status.replace('_', ' ')}
                                     </Badge>
                                 </td>

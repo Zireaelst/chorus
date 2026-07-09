@@ -40,7 +40,7 @@ export default async function DisputeDetailPage({ params }: { params: Promise<{ 
                         <div className="border rounded-md p-4 space-y-4">
                             <div>
                                 <p className="text-sm font-medium text-muted-foreground">Status</p>
-                                <Badge variant="outline" className="mt-1 capitalize">{mockDispute.status.replace('_', ' ')}</Badge>
+                                <Badge intent="outline" className="mt-1 capitalize">{mockDispute.status.replace('_', ' ')}</Badge>
                             </div>
                             <div>
                                 <p className="text-sm font-medium text-muted-foreground">Created</p>

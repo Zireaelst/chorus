@@ -39,7 +39,7 @@ export default async function MarketplaceAdminPage() {
                                 <td className="px-4 py-3 font-medium">{row.id}</td>
                                 <td className="px-4 py-3">{row.cohortId}</td>
                                 <td className="px-4 py-3 text-muted-foreground">
-                                    <Badge variant="default" className="text-xs px-2 py-0.5 rounded-full">
+                                    <Badge intent="default" className="text-xs px-2 py-0.5 rounded-full">
                                         R{row.startRound} - R{row.endRound}
                                     </Badge>
                                 </td>
@@ -47,9 +47,9 @@ export default async function MarketplaceAdminPage() {
                                 <td className="px-4 py-3 text-muted-foreground">{row.createdAt}</td>
                                 <td className="px-4 py-3">
                                     <div className="flex gap-2">
-                                        <Button variant="secondary" size="sm">View Passport</Button>
+                                        <Button intent="secondary" size="sm">View Passport</Button>
                                         <Link href={`/marketplace/${row.id}/license`}>
-                                            <Button variant="primary" size="sm">Manage Licenses</Button>
+                                            <Button intent="primary" size="sm">Manage Licenses</Button>
                                         </Link>
                                     </div>
                                 </td>

@@ -32,7 +32,7 @@ export default async function ReputationPage() {
                                 <td className="px-4 py-3 font-medium">{row.name}</td>
                                 <td className="px-4 py-3">
                                     {/* Using standard variant, NEVER verify-amber */}
-                                    <Badge variant="default" className="text-xs px-2 py-0.5 rounded-full">
+                                    <Badge intent="default" className="text-xs px-2 py-0.5 rounded-full">
                                         {row.score.toLocaleString()} pts
                                     </Badge>
                                 </td>
